@@ -12,30 +12,55 @@ A collection of useful videos, articles, and tools organized by topic. These are
 
 ## Regression & Gradient Descent
 
+- Train/test split - why we split data: https://www.youtube.com/watch?v=SjOfbbfI2qY or https://www.youtube.com/watch?v=zAxuIlCBvOw
+- Linear regression short intro: https://www.youtube.com/watch?v=3dhcmeOTZ_Q&t=35s
+- What is loss: https://www.youtube.com/watch?v=QBbC3Cjsnjg
+- Gradient descent (conceptual, don't worry about the math): https://www.youtube.com/watch?v=sDv4f4s2SB8&t=85s
 - Google ML Crash Course - Linear Regression: https://developers.google.com/machine-learning/crash-course/linear-regression
-- 3Blue1Brown - Gradient descent, how neural networks learn (19 min, visual): https://www.youtube.com/watch?v=IHZwWFHWa-w
-- StatQuest - Bias and Variance (clear explanation of the tradeoff, connects to overfitting/underfitting): https://www.youtube.com/watch?v=EuBBz3bI-aA
+- Derivatives - what is a derivative (simple, slope at a point): https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-1-new/ab-2-1/v/derivative-as-a-concept
+- Feature scaling / normalization (~5 min, Andrew Ng, contour plots): https://www.youtube.com/watch?v=FDCfw-YqWTE
+- Overfitting & underfitting: https://www.youtube.com/watch?v=B9rhzg6_LLw or https://www.youtube.com/watch?v=o3DztvnfAJg or https://www.youtube.com/watch?v=dBLZg-RqoLg
+- StatQuest - Bias and Variance (clear explanation of the tradeoff): https://www.youtube.com/watch?v=EuBBz3bI-aA
 
 ## Classification & Neural Networks
 
+- Visually Explained - Classification intro (clear visual walkthrough): https://www.youtube.com/watch?v=3bvM3NyMiE0
+- StatQuest - Logistic Regression (15 min, sigmoid, log-odds, maximum likelihood): https://www.youtube.com/watch?v=yIYKR4sgzI8
 - Google ML Crash Course - Logistic Regression: https://developers.google.com/machine-learning/crash-course/logistic-regression
-- 3Blue1Brown - But what is a neural network? (19 min, visual): https://www.youtube.com/watch?v=aircAruvnKk
+- Activation functions explained: https://www.youtube.com/watch?v=s-V7gKrsels
+- Neural networks in PyTorch (playlist, good for L4-L5): https://www.youtube.com/watch?v=kY14KfZQ1TI&list=PLCC34OHNcOtpcgR9LEYSdi9r7XIbpkpK1&index=1
 - Medium - Train a Neural Network in PyTorch (beginner walkthrough): https://medium.com/@sahin.samia/train-a-neural-network-in-pytorch-a-complete-beginners-walkthrough-3897d18d6078
+- PyTorch - Building Models tutorial (nn.Module, nn.Sequential): https://docs.pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html
 
 ## MLPs & Tabular Pipelines
 
+- StatQuest - Confusion Matrix (6 min): https://www.youtube.com/watch?v=Kdsp6soqA7o
+- StatQuest - Sensitivity and Specificity (12 min, precision/recall): https://www.youtube.com/watch?v=vP06aMoz4v8
+- StatQuest - Cross Validation (6 min): https://www.youtube.com/watch?v=fSytzGwwBVw
+- StatQuest - ROC and AUC (16 min): https://www.youtube.com/watch?v=4jRBRDbJemM
 - PyTorch - Dataset & DataLoaders tutorial: https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html
-- DataLoaders video: https://www.youtube.com/watch?v=PXOzkkB5eH0
+- DataLoaders video (~10 min): https://www.youtube.com/watch?v=PXOzkkB5eH0
 - PyTorch classification from scratch: https://www.slingacademy.com/article/pytorch-classification-from-scratch-building-a-dense-neural-network/
 - PyTorch for tabular data with embeddings: https://yashuseth.wordpress.com/2018/07/22/pytorch-neural-network-for-tabular-data-with-categorical-embeddings/
 - NYC taxi fares example: https://francescopochetti.com/pytorch-for-tabular-data-predicting-nyc-taxi-fares/
+- Google ML Crash Course - Classification metrics: https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall
 
 ## Trees & Gradient Boosting
 
+- StatQuest - Decision Trees (18 min, must-watch): https://www.youtube.com/watch?v=_L39rN6gz7Y
+- StatQuest - Random Forests Part 1 (10 min): https://www.youtube.com/watch?v=J4Wdy0Wc_xQ
+- StatQuest - Regression Trees (9 min): https://www.youtube.com/watch?v=g9c66TUylZ4
 - Random Forests (fastai lesson): https://www.youtube.com/watch?v=AdhG64NF76E&list=PLfYUBJiXbdtSvpQjSnJJ_PmDQB_VyT5iU&index=7
-- Gradient Boosted Trees: https://www.youtube.com/watch?v=PxgVFp5a0E4
-- SHAP - Model Interpretation: https://www.youtube.com/watch?v=MQ6fFDwjuco
+- StatQuest - Gradient Boosted Trees (15 min): https://www.youtube.com/watch?v=3CC4N4z3GJc
+- StatQuest - Gradient Boosting for classification (11 min): https://www.youtube.com/watch?v=jxuNLH5dXCs
+- Gradient Boosted Trees overview (StatQuest, 10 min): https://www.youtube.com/watch?v=PxgVFp5a0E4
+- SHAP - Model Interpretation (22 min): https://www.youtube.com/watch?v=MQ6fFDwjuco
 - Model Interpretable vs Explainable: https://www.youtube.com/watch?v=VY7SCl_DFho
+- scikit-learn Decision Trees docs: https://scikit-learn.org/stable/modules/tree.html
+- scikit-learn Random Forests docs: https://scikit-learn.org/stable/modules/ensemble.html
+- XGBoost docs: https://xgboost.readthedocs.io/en/latest/
+- LightGBM docs: https://lightgbm.readthedocs.io/en/latest/
+- SHAP docs: https://shap.readthedocs.io/en/latest/
 
 ## CNNs & Image Classification
 
@@ -91,8 +116,6 @@ These come up constantly when exploring data, evaluating models, and understandi
 A derivative measures how much a function's output changes when you nudge the input slightly. That's it. You don't need to be able to compute derivatives by hand - PyTorch does that automatically. But understanding the concept ("if I change this input a little, how much does the output change?") is essential because that's exactly what gradient descent does: it asks "which direction should I nudge the weights to reduce the loss?"
 
 **Resources:**
-- 3Blue1Brown - Essence of Calculus, Chapter 2: The paradox of the derivative (17 min, builds the intuition visually without requiring any prior calculus): https://www.youtube.com/watch?v=9vKqVkMQHKk
-- 3Blue1Brown - Essence of Calculus, full series (if you want the full picture, chapters 1-3 are enough for ML purposes): https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr
 - Khan Academy - Derivatives introduction: https://www.khanacademy.org/math/calculus-1/cs1-derivatives-definition-and-basic-rules
 
 ### What about linear algebra / matrix multiplication?

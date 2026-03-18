@@ -21,7 +21,7 @@ https://www.youtube.com/watch?v=EMXfZB8FVUA&list=PLqnslRFeH2UrcDBWF5mfPGpqQDSta6
 
 **Audience:** Students with Python/web dev background (know FastAPI, Docker, PostgreSQL)
 
-**Framework:** PyTorch is the primary framework throughout the course. fastai appears briefly in L2 as a high-level tool to showcase end-to-end ML before students understand the internals. From L3 onwards, everything is built in PyTorch so students understand what's happening under the hood.
+**Framework:** PyTorch is the primary deep learning framework. fastai appears in L2 as a high-level tool to showcase end-to-end ML before students understand the internals. L3-L4 build models from scratch in NumPy first (so students see the raw math), then transition to PyTorch. From L5 onwards, PyTorch is the default for neural networks. sklearn is used throughout for preprocessing, evaluation, and tree-based models (L7).
 
 ---
 
@@ -66,11 +66,11 @@ Possible changes:
 
 **Demos:**
 
-- sklearn on Titanic (tabular)
-- torchvision ResNet on images
-- HuggingFace pipeline on text
+- sklearn on Titanic (tabular classification) + California Housing (regression)
+- torchvision ResNet on images + YOLO object detection
+- HuggingFace pipeline on text (sentiment analysis, text generation)
 
-**Terminology introduced:** features, labels, model, training, inference, supervised learning
+**Terminology introduced:** features, labels, model, training, inference, supervised learning, classification, regression, overfitting, train/test split, parameters/weights, gradient descent, epoch, loss
 
 **Note — "The overwhelm talk":** Include a moment (ideally early) where we acknowledge that ML has a brutal learning curve. There are so many moving parts — terminology, math, code patterns, conceptual layers — that it can feel like your brain is short-circuiting. Generate/include an image of a chaotic, overloaded brain (symbolizing frustration, information overload). Use it to normalize the feeling and deliver the message: give things time to sink in. Repetition is how it clicks — concepts that feel impossible in week 2 become obvious by week 6. You don't need to understand everything to be productive. "Släpp sargen" — let go of the need to master every detail before moving forward. The course is designed so that you'll revisit every core idea multiple times, from different angles, and each pass adds clarity. Consider adding this to the L1 notebook as well.
 
@@ -80,11 +80,14 @@ Possible changes:
 
 **Topics:**
 
+- Structured around a 6-step ML process: Understand -> Prepare -> Train -> Evaluate -> Iterate -> Ship
 - fastai DataBlock API: loading image data
 - Transfer learning: use a pretrained ResNet
-- Fine-tuning: `learn.fine_tune(3)`
+- Fine-tuning: `learn.fine_tune()`
 - See the output: loss going down, accuracy going up
-- Interpret results: what did the model learn?
+- Interpret results: confusion matrix, top losses analysis
+- Iterate: disciplined experimentation (bigger model, more epochs, higher resolution)
+- Deploy: model export, Streamlit + FastAPI app, Docker Compose
 - "It works! But how? That's what we'll learn next."
 
 **Terminology introduced (as they appear in output):**
@@ -95,7 +98,7 @@ Possible changes:
 - train/valid ("why two losses?")
 - accuracy ("how often it's right")
 
-**Dataset:** Pet breeds, food images, or similar (visual, fun)
+**Dataset:** Pet breeds (37 breeds, Oxford-IIIT Pets)
 
 **The point:** Students leave with a working image classifier. Curiosity is sparked. Week 2 explains how it actually works.
 
@@ -115,20 +118,24 @@ https://developers.google.com/machine-learning/crash-course/linear-regression
 
 **Topics:**
 
-- Problem: predict continuous value (house prices or similar)
+- Problem: predict continuous value (house prices)
 - Linear regression: y = wx + b
 - Loss function: MSE - "how wrong are we?"
 - Gradient descent: "follow the slope downhill"
     - Visual: loss landscape, moving toward minimum
     - Math: compute gradient, update weights
-    - Learning rate: step size matters
+    - Learning rate: step size matters (interactive exploration)
 - Multiple features: "same thing, just dot product"
-- The training loop: forward → loss → backward → update → repeat
-- Code from scratch, then show PyTorch version
+- The training loop: forward -> loss -> backward -> update -> repeat
+- Code from scratch in NumPy, then show PyTorch version (validate they match)
+- Evaluation metrics: MSE, RMSE, MAE, R²
+- Overfitting vs underfitting: polynomial regression showing the progression
+- Multiple features: adding features, feature importance, diminishing returns
+- Neural network teaser: show a simple NN beating linear regression on same data, preview L4
 
-**Terminology introduced:** parameters/weights, loss function, gradient, gradient descent, forward pass, learning rate
+**Terminology introduced:** parameters/weights, loss function, gradient, gradient descent, forward pass, learning rate, hyperparameters, epoch, overfitting, underfitting, extrapolation
 
-**Dataset:** Simple regression (house prices, salary prediction, or similar)
+**Dataset:** California Housing
 
 ---
 
@@ -144,38 +151,33 @@ https://developers.google.com/machine-learning/crash-course/logistic-regression
 
 **Topics:**
 
+- Opening demos: classification across domains (medical diagnosis, fraud detection, handwritten digits) using sklearn black boxes to show the breadth of classification
 - Problem shift: predicting categories, not numbers
+- Titanic dataset: data exploration, survival patterns by gender/class/age
+- Manual decision boundary: try drawing a line by hand, see it fail (~67%)
+- Linear regression on binary data: shows why it breaks (outputs outside 0-1)
 - Sigmoid: "squash output to probability 0-1"
 - Logistic regression: linear + sigmoid
-    - Same gradient descent loop from L3
-    - Cross-entropy loss (brief: "penalizes confident wrong answers")
+    - Same gradient descent loop from L3, built from scratch in NumPy
+    - Cross-entropy loss: full "Why Not MSE?" section with interactive comparison
     - Train on Titanic, see accuracy
-- The limitation: "only linear decision boundaries"
-    - Visual: problems logistic regression can't solve
+    - Weight interpretation: model discovers "women and children first" from data alone
+- Decision boundary visualization: straight line on 2D scatter plot
+- Overfitting in classification: polynomial features (degree 1/3/8) showing underfit/fit/overfit
+- The limitation: manual feature engineering doesn't scale
 - Enter the MLP (PyTorch):
-    
-    ```python
-    class MLP(nn.Module):
-        def __init__(self):
-            super().__init__()
-            self.layers = nn.Sequential(
-                nn.Linear(n_features, 16),
-                nn.ReLU(),
-                nn.Linear(16, 1),
-                nn.Sigmoid()
-            )
-    
-    ```
-    
+    - PyTorch intro: tensors, automatic differentiation, nn.Module
+    - sklearn MLPClassifier shown for reference (quick aside)
+    - MLP architecture: one hidden layer with 16 neurons
+    - Explicit connection: sigmoid and cross-entropy reused from logistic regression, only new piece is hidden layer + ReLU
     - Train on same Titanic data
-    - Compare: MLP beats logistic regression
+    - Compare decision boundaries: straight (logistic) vs curved (MLP) side by side
 - Conceptual explanation:
-    - Hidden layers: "intermediate representations"
-    - ReLU: "non-linearity between layers"
-    - Why "deep"? More layers = more abstract features
+    - Hidden layers: "intermediate representations" / "automatic feature engineering"
+    - ReLU: "non-linearity between layers" (light intro, L5 goes deeper)
 - Preview: "It works better. But what's actually happening? Next lesson."
 
-**Terminology introduced:** sigmoid, cross-entropy, logistic regression, activation function, hidden layer, ReLU, neurons, layers, architecture
+**Terminology introduced:** sigmoid, cross-entropy, logistic regression, decision boundary, activation function, hidden layer, ReLU, neurons, layers, architecture, tensor, automatic differentiation
 
 **Dataset:** Titanic
 
@@ -560,13 +562,13 @@ These concepts are introduced where they naturally fit, then used throughout sub
 | Topic | First Introduced | Then Used In |
 | --- | --- | --- |
 | Optimizers (SGD, Adam) | L5 (training loop) | Every lesson after |
-| Softmax (multi-class) | L8 (10-class images) | L10, L11, anywhere multi-class |
-| Data augmentation | L8 (intro), L9 (expand) | Image lessons |
-| Learning rate schedulers | L9 | L10+ when training |
-| Batch normalization | L9 | CNN architectures |
+| Softmax (multi-class) | L9 (10-class images) | L11, L12, anywhere multi-class |
+| Data augmentation | L9 (intro), L10 (expand) | Image lessons |
+| Learning rate schedulers | L10 | L11+ when training |
+| Batch normalization | L11 | CNN architectures |
 | Cross-validation | L6 | When evaluating models |
 | Class imbalance | L6 | When relevant to dataset |
-| Dropout, weight decay | L9 | When regularizing |
+| Dropout, weight decay | L10 | When regularizing |
 | RNNs (brief context) | L14 | Historical mention before LLMs |
 
 ### Consider Adding

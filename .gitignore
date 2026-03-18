@@ -31,3 +31,6 @@ Thumbs.db
 .vscode/
 .idea/
 
+
+# Large datasets (downloaded at runtime)
+data/creditcard/

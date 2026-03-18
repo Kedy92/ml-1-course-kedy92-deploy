@@ -94,10 +94,6 @@ Google has a nice interactive explanation of overfitting: [Google ML Crash Cours
 
 **Confusion matrix** - a grid showing which classes the model confuses with each other. If the model often predicts "Ragdoll" when the answer is "Birman", those two breeds appear as a hot spot in the confusion matrix. Very useful for understanding where the model struggles. For a deeper dive: [Machine Learning Mastery - What is a Confusion Matrix](https://machinelearningmastery.com/confusion-matrix-machine-learning/)
 
-**Hyperparameters** - settings you choose *before* training that control how the model learns. Unlike weights (which the model learns from data), hyperparameters are decisions you make: which architecture to use, how many epochs to train, what image resolution to use, what learning rate to set. The model can't figure these out on its own - you pick them, train, measure the result, and adjust. This is the experimentation loop that ML practitioners spend most of their time in.
-
-The distinction matters: **parameters** (weights) are learned automatically during training. **Hyperparameters** are set by you and stay fixed during a training run. Changing a hyperparameter means retraining from scratch and comparing the result. In the notebook, we'll run several experiments where we change one hyperparameter at a time (architecture, epochs, image size) and compare accuracy. This "change one thing, measure, repeat" discipline is one of the most important habits to build early.
-
 ## What We'll Do in the Notebook
 
 ### Step 1: Understand Your Data
@@ -121,15 +117,9 @@ Load a pretrained ResNet34 and fine-tune it on our pet data. Watch the training 
 
 Look at the confusion matrix to see which breeds get mixed up. Examine the model's biggest mistakes (top losses). Make predictions on individual images and see the confidence scores. Peek under the hood at what the model actually receives as input (a 224x224x3 grid of numbers).
 
-### Step 5: Iterate (Hyperparameter Tuning)
+### Step 5: Iterate
 
-This is where we introduce hyperparameters properly. We run three experiments against our baseline (ResNet34, 5 epochs, 224px):
-
-1. **Bigger model** - ResNet50 instead of ResNet34. More parameters, more capacity. Does it help?
-2. **More epochs** - 8 instead of 5. The model was still improving - will more training push accuracy higher, or will it start overfitting?
-3. **Larger images** - 320px instead of 224px. More pixels means more detail, but also slower training and more memory.
-
-Each experiment changes exactly one thing. We compare all results in a single chart. The takeaway isn't which setting "wins" - it's that ML is fundamentally about this experimentation loop. Form a hypothesis, change one thing, measure, learn. Repeat. In later lessons we'll add more hyperparameters to this toolkit (learning rate, regularization, schedulers), but the discipline of systematic experimentation starts here.
+Experiment with different settings: more epochs, a bigger architecture (ResNet50), larger images (320px instead of 224px). Change one thing at a time, measure the impact. This is how real ML development works - systematic experimentation.
 
 ### Step 6: Ship
 
@@ -151,7 +141,6 @@ Export the trained model to a .pkl file. Load it back and prove it works without
 | **Learning rate** | Step size for weight adjustments | Controls training speed |
 | **Confusion matrix** | Grid of predicted vs actual classes | Where the model gets confused |
 | **Batch** | Group of images processed together | 64 images at a time |
-| **Hyperparameter** | Setting you choose before training | Architecture, epochs, image size, LR |
 
 ## Connection to L1 and L3
 
@@ -161,14 +150,8 @@ Export the trained model to a .pkl file. Load it back and prove it works without
 
 ## Resources
 
-### Course video:
-
-TBA
-
 ### Before the lesson
 
-- 3Blue1Brown - But What is a Neural Network? (19 min, excellent visual intuition for how neural networks work, great complement to our neural network intro from L1): https://www.youtube.com/watch?v=aircAruvnKk
-- StatQuest - Neural Networks Pt.1 (20 min, builds up from simple models to neural nets, clear and methodical): https://www.youtube.com/watch?v=CqOfi41LfDw
 - [fast.ai](http://fast.ai/) Practical Deep Learning - Lesson 1 (~90 min, same top-down philosophy we use, covers transfer learning and the fastai workflow in depth): https://course.fast.ai/Lessons/lesson1.html
 
 ### Documentation and tutorials
@@ -183,9 +166,14 @@ TBA
 - IBM Technology - What is Transfer Learning? (~5 min, clear explanation with examples): https://www.youtube.com/watch?v=BqqfQnyjmgg
 - deeplizard - Fine-tuning a Neural Network Explained (short, focused on the concept of fine-tuning): https://deeplizard.com/learn/video/5T-iXNNiwIs
 
+### What is a neural network? → We’ll dive deeper into this upcoming lessons (l4 and onward), but feel free to start checking it out. It might feel super hard, and that’s fine, again - we’ll dive deeper later, and I’ve spent a lot of time on the notebooks 4,5,6,7,8~ to help explain it.
+
+- 3Blue1Brown - But What is a Neural Network? (19 min, excellent visual intuition for how neural networks work, great complement to our neural network intro from L1): https://www.youtube.com/watch?v=aircAruvnKk
+- StatQuest - Neural Networks Pt.1 (20 min, builds up from simple models to neural nets, clear and methodical): https://www.youtube.com/watch?v=CqOfi41LfDw
+
 ### The fastai course
 
-The fastai course by Jeremy Howard is a solid companion to this course. It has a similar top-down philosophy (use it first, understand later). Their first two lessons overlap with our L1-L2. The course is free and available at https://course.fast.ai/. Worth watching the first lesson before or after our L2. In fact, this course is very much inspired by the fastai course, but the goal is to do everything in pure pytorch, and we’ll spend more or less time on certain topics.
+The fastai course by Jeremy Howard is a solid companion to this course. It has a similar top-down philosophy (use it first, understand later). Their first two lessons overlap with our L1-L2. The course is free and available at https://course.fast.ai/. Worth watching the first lesson before or after our L2. In fact, this course is very much inspired by the fastai course, but the goal is to do everything in pure pytorch instead of using the fastai framework, and we’ll spend more or less time on certain topics.
 
 - [fast.ai](http://fast.ai/) Practical Deep Learning - Lesson 2 (deployment and production, goes deeper on the ship step): https://course.fast.ai/Lessons/lesson2.html
 - Dive into Deep Learning - Fine-tuning chapter (textbook-style explanation with code): http://d2l.ai/chapter_computer-vision/fine-tuning.html
