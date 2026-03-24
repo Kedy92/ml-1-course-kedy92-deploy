@@ -1,70 +1,80 @@
-# L04: Classification + Neural Networks (Top-Down)
+In Lesson 4, we built an MLP (multilayer perceptron), sometimes also called ANN, artifical neural network, that classified Titanic passengers. We wrote the model, called `loss.backward()`, and watched accuracy climb. It worked. But we treated most of it as a black box - layers were stacked, a training loop ran, numbers improved. We didn't stop to ask what the numbers actually look like as they flow through the network, or why `loss.backward()` magically knows which weights to fix.
 
-In Lesson 3, we built linear regression from scratch - predicting house prices with gradient descent, MSE loss, and a training loop. You saw the full cycle: forward pass, compute loss, backward pass, update weights. That loop is the backbone of all ML training, and it doesn't go away. What changes in L4 is the question we're asking.
+This lesson opens the black box. We trace real data through a neural network step by step - watching matrix multiplications happen, seeing what ReLU does to actual values, understanding how the loss tells us exactly how wrong we are. Then we follow the signal backwards: how gradients assign blame to each weight, and how optimizers use that information to make the network better. By the end, you'll understand every moving part of the training loop you've already been using.
 
-Instead of "how much?" we're asking "which one?" The output isn't a number like $347,000 - it's a category. Survived or died. Spam or not spam. Benign or malignant. The model's job is to output a probability: "I'm 87% confident this passenger survived."
+The training loop pattern (forward - loss - backward - update - repeat) is the same whether you're training on 712 Titanic passengers or 1.2 million images. Once you understand it here, you understand it everywhere.
 
-That shift from numbers to categories is the difference between regression and classification. And it turns out we only need two new ingredients to make the jump: a function that squashes any number into a probability (sigmoid), and a loss function designed for yes/no answers (cross-entropy). Everything else - gradient descent, the training loop, weight updates - stays the same.
-
-Once we have logistic regression working, we'll hit its limit: it can only draw straight decision boundaries (e.g split data into groups using a straight line). Some problems need curves. That's where neural networks enter. We'll build a Multi-Layer Perceptron (MLP) in PyTorch, train it on the same data, and watch it outperform logistic regression. The MLP learns its own features - curved, nonlinear boundaries that capture patterns logistic regression misses.
-
-The goal isn't to fully understand what's happening inside the network yet. That's L5. The goal here is to see it work and build intuition for why adding layers and activation functions changes what a model can learn.
+One thing that took me a while to grasp as a beginner: **the training loop IS gradient descent.** In L3, we learned gradient descent as "compute the gradient, take a step downhill, repeat." That's exactly what the training loop does - it's just spread across four named steps. The forward pass computes predictions. The loss measures error. The backward pass computes gradients (one per weight - a matrix of partial derivatives saying how much each weight contributed to the error). The weight update is the actual "step downhill." That's gradient descent. When you see `loss.backward()` followed by `optimizer.step()`, that IS the same algorithm from L3 - just applied to 97 weights through multiple layers instead of 2 weights in a straight line.
 
 ## Key Concepts
 
-**Sigmoid** - takes any number and squashes it to a value between 0 and 1. Large negative numbers become close to 0, large positive numbers become close to 1, and zero maps to exactly 0.5. This is the bridge between regression (any output) and classification (probability output). In L3, our model output could be any real number. Wrapping it in sigmoid gives us something we can interpret as "chance of survival."
+**The Forward Pass** is where data flows through the network. This part usually takes some time to understand because it involves multiplying each row with weights, which in turn ends up creating new inputs for upcoming layers in the neural network. It’s like a step by step process, where finally, by the end, we get some outputs that are the probabilities for our problem - whether its regressio nor classifation. Each layer does the same thing: multiply inputs by weights, add a bias, apply an activation function. That's it. For our Titanic MLP, passenger features (Pclass, Sex, Age, Fare) enter as a tensor, get multiplied by a weight matrix in the first linear layer, pass through ReLU (which zeros out negatives and keeps positives), then hit a second linear layer and finally sigmoid to produce a probability. We trace this with actual numbers in the notebook - you'll see exactly what a 4-feature input looks like after each transformation.
 
-**Logistic regression** - same linear model from L3 (z = wx + b), but we pass the output through sigmoid before making a prediction. If sigmoid(z) > 0.5, predict "survived." Otherwise, predict "died." It's still using gradient descent to learn the weights - the only change is the activation at the end and the loss function.
+**Matrix Multiplication** is how neural networks process data efficiently. Instead of computing one neuron at a time, we multiply the entire input batch against the weight matrix in a single operation. Each row in the weight matrix is one neuron's "recipe" for combining inputs. The shape rule is simple: `(samples x features) @ (features x neurons) = (samples x neurons)`. This is why neural networks run fast on GPUs - matrix math parallelizes beautifully.
 
-**Cross-entropy loss** - replaces MSE from L3. The intuition: it heavily penalizes confident wrong predictions. If the model says "99% chance this person survived" and they actually died, the loss spikes. If it says "51% survived" and gets it wrong, the penalty is much smaller. This is exactly what we want - push the model to be honest about its uncertainty.
+**Loss Calculation** measures how wrong the predictions are. For binary classification, we use binary cross-entropy. The key intuition: the model gets penalized more for confident wrong answers than uncertain ones. Predicting 0.99 when the answer is 0 is much worse than predicting 0.6 when the answer is 0. This asymmetric punishment is what drives the network to be both accurate and calibrated. Depending on the task, we use different loss functions: `BCELoss` (binary cross-entropy) for binary classification like Titanic, `CrossEntropyLoss` for multi-class classification like digit recognition (0-9), or `MSELoss` for regression like house prices. You’ll see all three as the course progresses.
 
-**Decision boundary** - the line (or curve) where the model switches from predicting one class to the other. For logistic regression, this is always a straight line. You can engineer polynomial features to get curves, but that requires manual feature design. Neural networks learn curves automatically.
+**Backpropagation** answers the question: "which weights caused the error, and by how much?" When you call `loss.backward()`, PyTorch traces backwards through every operation (sigmoid, matrix multiply, ReLU, another matrix multiply) and computes a gradient for each weight. Think of it as blame assignment - each weight gets a number saying "you contributed this much to the loss." You don't need to compute derivatives by hand. PyTorch's autograd system tracks every operation and applies the chain rule automatically. But understanding that this process exists, and that it produces one gradient per weight, is essential. But it’s not critical to understand exactly how it works, e.g the chain rule - backprop is actually one of the hardest things to grasp about neural networks, and a large part of that is because the math is based on partial derivatives… so we skip that ;-)
 
-**The MLP (Multi-Layer Perceptron)** - logistic regression with hidden layers in between. Instead of going straight from input to output, the data passes through intermediate layers that learn to create useful feature combinations. Each layer transforms the data, making the next layer's job easier. The key insight: the network builds its own features instead of you engineering them. Don’t worry, we will spend a lot of time learning how this works, it will take multiple lessons - this is just the start.
+**The Weight Update** is what learning actually is. Once we have gradients (imagine a matrix of numbers that we use to update the weights, which also happens to be a matrix of numbers), the update rule is simple: `weight -= learning_rate * gradient`. If a weight's gradient is positive, that weight made the loss worse - so we decrease it. If negative, we increase it. The learning rate controls how big each step is. Too small and training crawls. Too large and it overshoots, making the loss jump around instead of decreasing.
 
-**ReLU (Rectified Linear Unit)** - the activation function between hidden layers. It keeps positive values and zeros out negatives. Simple, but critical: without it, stacking linear layers just gives you another linear layer (matrix math collapses). ReLU introduces the non-linearity that lets the network learn curves. Sigmoid squashes to 0-1 at the output, ReLU bends the space between layers.
+**Optimizers** are smarter versions of this update rule. SGD (Stochastic Gradient Descent) is exactly what we described above - subtract learning rate times gradient. It works, but it treats every parameter the same. Adam adapts the learning rate per parameter based on how the gradients have been behaving. Parameters with consistently large gradients get smaller steps; parameters with small, noisy gradients get larger steps. Adam is the default choice for most problems. SGD with momentum is sometimes preferred for large-scale training where memory matters.
 
-**Hidden layers** - the intermediate layers between input and output. Each neuron in a hidden layer computes a weighted sum of its inputs, applies ReLU, and passes the result forward. Think of them as the network building its own intermediate representations - features you didn't design but that turn out to be useful for the task. This is part of the “black box” that you might have heard of - a hidden layer will recognize patterns, but we don’t know what these patterns are deep down in neural networks, because gradient descent will optimize the numbers where it finds patterns.
+**Epochs and Batches** control how we feed data to the training loop. An epoch is one complete pass through all training data (e.g we have run forward pass on ALL rows). A batch is a chunk of data processed together in one forward/backward pass. For Titanic (712 samples), we process everything at once. For ImageNet (1.2 million images), we process batches of 64 or 128 at a time. Batches exist because of memory constraints. Epochs exist because one pass through the data isn't enough - the network needs many passes to converge / find the “valley”.
 
 ## Terminology
 
 | Term | What it means | Where we see it |
 | --- | --- | --- |
-| **Classification** | Predicting a category, not a number | Survived/died, benign/malignant |
-| **Sigmoid** | Squashes any number to 0-1 range | Output layer of logistic regression |
-| **Logistic regression** | Linear model + sigmoid for classification | Our first classifier on Titanic |
-| **Cross-entropy loss** | Loss function that penalizes confident wrong answers | Replaces MSE from L3 |
-| **Decision boundary** | Line/curve where model switches predictions | Visualized in 2D feature space |
-| **MLP (Multi-Layer Perceptron)** | Neural network with hidden layers | Our upgrade from logistic regression |
-| **Hidden layer** | Intermediate layer that learns feature combinations | 16 neurons between input and output |
-| **ReLU** | Activation: keep positives, zero out negatives | Between hidden layers |
-| **Activation function** | Non-linear function applied after a layer | Sigmoid (output), ReLU (hidden) |
-| **Neuron** | One unit in a layer, computes weighted sum + activation | 16 neurons in our hidden layer |
-| **Architecture** | The structure of a network (layers, sizes, activations) | Linear-ReLU-Linear-Sigmoid |
-| **Parameters/weights** | Numbers the network learns during training | 97 total in our small MLP |
+| **Forward pass** | Data flowing through layers to produce predictions | Input tensor through linear layers, ReLU, sigmoid |
+| **Tensor** | Multi-dimensional array (PyTorch's core data structure) | Input data, weights, gradients - everything is a tensor |
+| **Weight matrix** | The learnable parameters in a linear layer | Each row is one neuron's recipe for combining inputs |
+| **Bias** | An offset added after multiplication | Lets neurons activate even when inputs are zero |
+| **ReLU** | Activation that zeros negatives, keeps positives | Between hidden layers - adds non-linearity |
+| **Loss** | Single number measuring prediction error | Binary cross-entropy penalizes confident wrong answers |
+| **Backpropagation** | Computing gradients by tracing backwards through operations | `loss.backward()` fills `.grad` on every parameter |
+| **Gradient** | How much each weight contributed to the loss | Stored on parameters after backward pass |
+| **Autograd** | PyTorch's automatic differentiation engine | Tracks operations, computes chain rule automatically |
+| **Learning rate** | Step size for weight updates | Controls how much weights change per iteration |
+| **SGD** | Stochastic Gradient Descent - basic optimizer | `weight -= lr * gradient` |
+| **Adam** | Adaptive optimizer - adjusts LR per parameter | Default choice, converges faster than SGD on most problems |
+| **Epoch** | One complete pass through all training data | Outer loop: repeat the full dataset multiple times |
+| **Batch** | Chunk of data processed in one forward/backward pass | Inner loop: process 64 samples at a time |
+| **Hyperparameter** | Setting you choose before training (not learned) | Learning rate, batch size, number of epochs, architecture |
 
-## From L3 to L4 and then to L5
+## Connection to L4 and L6
 
-**From L3:** Everything we built in the regression lesson carries over. The training loop (forward, loss, backward, update) is identical. Gradient descent still drives the learning. The difference is the output activation (sigmoid instead of raw output) and the loss function (cross-entropy instead of MSE). If L3 made sense, L4 is a small step - same engine, different task.
+**From L4:** We built the MLP architecture and trained it on Titanic. We introduced hidden layers, ReLU, sigmoid, and cross-entropy loss as concepts. L5 opens up every one of those concepts and shows what happens inside - the actual numbers, the actual matrix multiplications, the actual gradient values. The model code is the same; the understanding is completely different.
 
-**To L5:** We've seen the MLP work and beat logistic regression, but we've treated it like a black box. L5 opens that box. We trace data through every layer - matrix multiplication, ReLU, another matrix multiplication, sigmoid. We see what hidden neurons actually compute, how loss.backward() calculates gradients, and how optimizers update weights. L4 gives you the "what" and the "why." L5 gives you the "how."
+**To L6:** Now that you understand the training loop, L6 focuses on everything that happens before and after it. Data preprocessing (handling missing values, normalization, encoding categoricals), building proper data pipelines with DataLoaders, and evaluation (confusion matrix, precision, recall). L5 gives you the engine. L6 gives you the full car - from raw data to evaluated model.
 
-## Resources
+## Resources - TWO VERY IMPORTANT NOTES FIRST:
 
-### Before the lesson
+1. **REMEMBER**! A lot of videos introduce neural networks as a way to classify images. I’ve always personally found that unintuitive - because they are also just as useful with standard tabular data. That means that for many tutorials, the input data is actually a matrix of pixel values, instead of values from columns you’d find in a standard database. And unfortunately, there isn’t much content on people teaching neural networks from the tabular data perspective that we’ll use in this courses notebook (we’ll do images with neural networks later). Think about it: how weird isn’t it, that each column in the matrix represents one pixel in an image? I’d rather start with data that is easy to interpret, and use a neural network for that, e.g the titanic data, or customer sales data!
+2. Do not watch tutorials using tensorflow, unless you do it mainly to understand the concepts.
+3. My lesson on this will probably be very important as I try to show more how it works
 
-### Classification
+### Neural networks
 
-- A good intro video https://www.youtube.com/watch?v=3bvM3NyMiE0
-- You can try to read their section on logistic regression, but you don’t have to spend all that much time on the classification section as I personally believe we’ll deal more with ta as we get into neural networks https://developers.google.com/machine-learning/crash-course/logistic-regression - logistic regression is one way of doing classification, but don’t try to memorize everything - we don’t actually use logistic regression barely at all, what’s better to spend time on is understanding things like the sigmoid function, and once again realizing that we’re generating random weights and try to optimize them using gradient descent
-- StatQuest - Logistic Regression (15 min, clear walkthrough of sigmoid, log-odds, and maximum likelihood - the same model we build from scratch in the notebook): https://www.youtube.com/watch?v=yIYKR4sgzI8.
+A SMALL NOTE: My advice is that you try to use AI a lot to prompt yourself to understanding. I think the best way to learn is probably to create your own jupyter notebook where you ask the AI to take you though the entire process of training a neural network from scratch - as we’ll do in the L5 notebook “inside the neural network”.
 
-### Documentation and tutorials
+- https://www.youtube.com/watch?v=XxZ0BibMTjw ←The only video I could find that uses tabular data for neural networks to teach it from the start, unfortunately it’s not the best
+- StatQuest - Neural Networks Pt. 1: Inside the Black Box (20 min, builds from simple models to neural nets, clear and methodical, great complement to 3Blue1Brown): https://www.youtube.com/watch?v=CqOfi41LfDw
+- 3Blue1Brown - But What is a Neural Network? (19 min, the best visual explanation of neural networks available, walks through layers, neurons, and activations with animations): https://www.youtube.com/watch?v=aircAruvnKk
+- 3Blue1Brown - Gradient descent, how neural networks learn (21 min, visualizes the loss landscape and how gradient descent navigates it): https://www.youtube.com/watch?v=IHZwWFHWa-w
+- StatQuest - Neural Networks Pt. 3: ReLU in Action (10 min, shows exactly what ReLU does to a neural network's output, with step-by-step examples): https://www.youtube.com/watch?v=68BZ5f7P94E
+- StatQuest - Neural Networks Pt. 6: Cross Entropy (11 min, builds the intuition for why cross-entropy works as a loss function for classification): https://www.youtube.com/watch?v=6ArSys5qHAU
+- Activation functions: https://www.youtube.com/watch?v=XxZ0BibMTjw <-- You mostly just have to look at ReLU and sigmoid.
+- Activation functions: https://www.youtube.com/watch?v=s-V7gKrsels&t=12s <-- You mostly just have to look at ReLU and sigmoid.
 
-- Google ML Crash Course - Logistic Regression (interactive text, decent starting point for the math): https://developers.google.com/machine-learning/crash-course/logistic-regression
-- Medium - Train a Neural Network in PyTorch (beginner walkthrough, covers the same ground as our notebook): https://medium.com/@sahin.samia/train-a-neural-network-in-pytorch-a-complete-beginners-walkthrough-3897d18d6078
-- PyTorch - Building Models tutorial (official docs, reference for nn.Module and nn.Sequential): https://docs.pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html
+### Quick videos
 
-### Going deeper (optional)
+- StatQuest - Stochastic Gradient Descent, Clearly Explained (11 min, builds from basic gradient descent to SGD and mini-batches): https://www.youtube.com/watch?v=vMh0zPT0tLI
+- Deeplizard - PyTorch Training Loop Explained (short, walks through the forward-backward-update pattern in code): https://www.youtube.com/watch?v=XAkN07mEzpo
 
-- 3Blue1Brown - What is Backpropagation Really Doing? (13 min, preview of L5 content, watch if you're curious about what happens inside the network): https://www.youtube.com/watch?v=Ilg3gGewQ5U
+### Practical sources
+
+### Full tutorial series
+
+- Patrick Loeber - PyTorch Tutorial series (comprehensive, covers tensors through training loops and beyond) - this is a great start with pytorch, but we’ll do more of the practical work in the next lesson: https://www.youtube.com/watch?v=EMXfZB8FVUA&list=PLqnslRFeH2UrcDBWF5mfPGpqQDSta6VK4
+- A tutorial that goes through the practical parts on how to use an eural network in pytorch for tabular data https://simulationbased.com/2021/02/03/a-deep-feedforward-network-in-pytorch-for-the-titanic-challenge/
