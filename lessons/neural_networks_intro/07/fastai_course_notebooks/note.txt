@@ -1,0 +1,2 @@
+These are the notebooks from the fastai course and the fastbook as part of that, all of which are available online. I have made some slight modifications to make it easier for you to run them. 
+The l7 notebook is very much inspired from them.

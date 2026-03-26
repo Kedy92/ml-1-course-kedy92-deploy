@@ -9,7 +9,7 @@
 
 Train an image classifier (a neural network) on a dataset we haven't used in class, deploy it as a working API, and share it with the class on Discord so others can try it out.
 
-This is the same process you walked through in L2 - understand, prepare, train, evaluate, iterate, deploy - but on your own, with a different dataset. BUT!!!! All of this will teach you a lot - but there is one particular thing that is important. This assignment is about getting used to doing the homeworks. Moving forward homeworks will be optional projects that you take on to learn that always just give you a starting point. Because I PROMISE YOU, just reading the lesson notebooks and running them DOES NOT MAKE YOU LEARN. It gives you a great idea of concepts, but learning kicks in when someone shows us a white canvas and says “draw”. And then you realize - ok, where do I start?
+This is the same process you walked through in L2 - understand, prepare, train, evaluate, iterate, deploy - but on your own, with a different dataset. BUT!!!! All of this will teach you a lot - but there is one particular thing that is important. This assignment is about getting used to doing the homeworks. Moving forward homeworks will be optional projects that you take on to learn that always just give you a starting point. Because I PROMISE YOU, just reading the lesson notebooks and running them DOES NOT MAKE YOU LEARN. It gives you a great idea of concepts, but learning kicks in when someone shows us a white canvas and says: “now I want you to draw”. And then you realize - ok, where do I start? And then you try to take a first step.. and second step.. and so forth
 That is when learning happens. And this lab is to force you into this position.
 
 That means this very first graded assignment is one of many “homeworks” in this course. And the point of the homeworks is to give you a notebook with some basic guidance, which you are going to use to step by step prompt your way to a working model.
@@ -36,8 +36,9 @@ It should:
 - Accept an image upload
 - Return the predicted class and confidence
 - Run locally with `docker-compose up` (or equivalent)
+- Create a basic streamlit frontend dashboard if you want to allow others to take part of it (you don’t have to, but it’s extremly easy and free to deploy) → prompt an AI to help you. Streamlit is extremly common among data scientists to prototype small projects.
 
-You don't need to deploy to AWS or any cloud service. Running locally is enough.
+You don't need to deploy to AWS or any cloud service.
 
 ### 3. Share it on Discord
 
@@ -46,12 +47,14 @@ Post in the assignment Discord thread:
 - A screenshot or short recording of your app making a prediction
 - What dataset you used and how many classes
 - One thing that surprised you (a weird top-loss image, an unexpected confusion, a hyperparameter that helped or didn't)
+- A link to the API so people can try it out
+- A link to a streamlit dashboard if you have one, that’s probably the most interesting way to let others try it out instead of just giving them the API. A good idea is to make sure the streamlit dashboard lists all the classes / categories, so that others know what type of images to test it with
 
 Try out at least one classmate's deployment and reply to their post with what happened when you tested it.
 
 ## The notebook
 
-You will use the homework notebook from L2: `02_exercise_train_your_own.ipynb`. This notebook is included in the assignment repo. It has the dataset options, the process steps, and empty code cells for you to fill in. That's the whole point - this assignment IS the homework, just graded.
+You will use the homework notebook from L2: `02_exercise_train_your_own.ipynb`. This notebook is included in the assignment repo. It has the dataset options, the process steps, and empty code cells for you to fill in. That's the whole point - this assignment IS the homework, just graded. You can choose other datasets than the one listed in the homework. 
 
 Open the notebook, read through it, pick a dataset, and start prompting your way through each phase. The notebook walks you through the same six steps from L2 (understand, prepare, train, evaluate, iterate, ship) but this time the code cells are blank. Your job is to fill them in, step by step, using an agent to help you write the code.
 

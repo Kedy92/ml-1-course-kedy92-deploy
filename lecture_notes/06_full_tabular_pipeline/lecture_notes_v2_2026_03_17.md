@@ -1,39 +1,46 @@
 # L06: Full Tabular Pipeline
 
-In Lesson 5, we opened the MLP's black box - tracing data through the forward pass, understanding backpropagation, dissecting the training loop, and comparing optimizers. We understand the mechanics of how a neural network learns. But we trained on a familiar dataset (Titanic) with clean data and simple features. Real-world data isn't like that. It has missing values, categorical strings, wildly different scales, and imbalanced classes. Before you can train anything useful, you need to deal with all of that.
+In L4 and L5, we built and understood the MLP - the architecture, the forward pass, backpropagation, the training loop. But we did all of that on the Titanic dataset with 4 clean features and no real mess. Real data isn't like that. It has missing values, categorical strings that need to become numbers, features at wildly different scales, and classes so imbalanced that a model can get 88% accuracy by predicting the same thing every time.
 
-This lesson is about the full pipeline - the complete workflow from raw messy data to a trained, evaluated model. Every step matters. Skip data exploration and you'll miss leakage. Skip normalization and your gradients will explode. Skip proper evaluation and you'll think your model is great when it's useless. This pipeline is what you'll reuse for every tabular project going forward, so we're building the habits right.
+This lesson is about the full pipeline - everything that happens before, during, and after training. If L5 was about understanding the engine, this lesson is about building the whole car: from raw messy CSV to a trained model you can actually evaluate honestly.
 
-Think of it like building a web app. You wouldn't ship a FastAPI endpoint without input validation, error handling, and proper testing. The ML pipeline is the same discipline applied to a different domain: data prep is input validation, the DataLoader is pagination, the training loop is your processing pipeline, and evaluation is your test suite.
+Think of it like building a web app. You wouldn't ship a FastAPI endpoint without input validation, error handling, and proper testing. The ML pipeline is the same discipline applied to a different domain. And just like web development, most of the work isn't in the core logic - it's in everything around it.
 
-## Key Concepts
+## The Pipeline
 
-**Data Exploration** - before touching any model, you need to understand your data. Shape, distributions, correlations, missing values, target balance. This is where you catch problems early: is there data leakage? Is the target heavily imbalanced? Are there sentinel values pretending to be real data (like 999 meaning "not contacted")? Never skip this step.
+The lesson follows a complete ML project from raw CSV to evaluated model. Every concept lives inside one of these steps - remember, the actual steps are generally very similar, but the details might change depending on our dataset, what type of problem we’re solving, but I think it’s very healthy to go through a proper pipeline. It will help us get better at pytorch, and overall this will be a far more practical lesson in terms of actually creating a model, a realistic workflow you’ll do many times from now on.
 
-**Missing Values** - real datasets have gaps. You have three options: drop rows (simple but wasteful), impute with mean/median/mode (preserves data but adds assumptions), or use a sentinel flag (useful when "missing" is itself informative). The right choice depends on how much data you have and why the values are missing. In the notebook, we'll encounter "unknown" values in multiple columns and make deliberate decisions about each.
+### Step 1: Explore the data
 
-**Normalization / Feature Scaling** - neural networks learn by multiplying inputs by weights and adjusting via gradients. If one feature ranges 0-5000 and another 0-7, the gradients will be dominated by the large feature. Standard scaling (subtract mean, divide by standard deviation) puts all features on the same playing field. Trees don't need this. Neural nets absolutely do.
+Before any model code, understand what you're working with. This is where you catch **data leakage** (features that wouldn't exist at prediction time), **class imbalance** (88% of one class makes accuracy meaningless), missing values, and **sentinel values** (999 pretending to be a real number). Skipping this step is how you train a model that looks great in a notebook but fails in production.
 
-**Categorical Encoding** - neural networks only understand numbers. Strings like "admin." or "married" need to be converted. Label encoding turns each category into an integer ID. For embedding-based MLPs (which we use in the notebook), these integer IDs become lookup keys into learnable embedding tables - small matrices where the network discovers its own representations for each category. One-hot encoding is the alternative, but it creates wide sparse inputs and defeats the purpose of embeddings.
+### Step 2: Preprocess
 
-**Embeddings** - each categorical column gets its own lookup table of learnable numbers. The job column with 12 categories might get a 12x6 embedding table. When the network sees "admin." (encoded as integer 0), it looks up row 0 and gets a 6-dimensional vector. These vectors start random and get optimized during training, just like weights. The network learns which jobs are similar to each other based on how they relate to the target.
+Neural networks only understand numbers. Categorical strings get **label encoded** into integer IDs, which become lookup keys for **embeddings** (learned in the model). Numerical features get **standard scaled** so no feature dominates the gradients. We split into train/validation first, then fit the scaler on training data only - fitting on the full dataset before splitting is a subtle form of data leakage.
 
-**Train/Validation Split** - you split the data into two parts. The model trains on the training set and you evaluate on the validation set. If the model performs well on training data but poorly on validation data, it memorized instead of learned. The `stratify` parameter ensures both splits maintain the same class ratio - critical when your data is imbalanced.
+### Step 3: Bridge to PyTorch
 
-**The Full Pipeline Pattern** - Preprocessing (clean, encode, scale) then Dataset/DataLoader (bridge from pandas to PyTorch tensors, batch the data) then Model (define the MLP architecture) then Training Loop (forward pass, loss, backward, update) then Evaluation (measure real performance). Each step is a building block. You'll repeat this pattern in every project.
+Pandas DataFrames become PyTorch tensors via a **Dataset** (storage) and **DataLoader** (batching and shuffling). This is the standard PyTorch pattern you'll reuse in every project going forward - tabular, images, text.
 
-**Class Imbalance** - what happens when 88% of your data is one class? A model that always predicts "no" gets 88% accuracy without learning anything. That's useless. We handle this with `pos_weight` in the loss function, which tells the model to pay more attention to the minority class. The model's raw accuracy might look lower, but it's actually learning meaningful patterns instead of taking the lazy path.
+### Step 4: Build the model
 
-**Evaluation Beyond Accuracy** - accuracy alone is misleading with imbalanced data. We need the full picture:
-- **Confusion matrix**: shows exactly where the model gets it right and wrong
-- **Precision**: "of everything you predicted yes, how many were actually yes?"
-- **Recall**: "of everything that was actually yes, how many did you catch?"
-- **F1 score**: balances precision and recall into one number
-- **AUC-ROC**: "if I pick a random positive and a random negative, how likely is the model to rank the positive higher?" Uses raw probabilities, not thresholds
+The big new concept here is **embeddings** - each categorical column gets a small learnable lookup table. The `job` column with 12 categories gets a 12x6 table where each row is a learned vector. These get concatenated with the scaled numerical features and fed through the same MLP architecture from L5.
 
-**Cross-Validation** - a single train/val split can be lucky or unlucky. Cross-validation splits the data multiple ways and averages the results. More robust, especially with smaller datasets. Brief intro here, used more in later lessons.
+We also switch from `BCELoss` (L5) to `BCEWithLogitsLoss` - same idea, but it applies sigmoid internally and is numerically more stable.
 
-**Hyperparameter Tuning** - the model's behavior depends heavily on choices you make before training: how many neurons, what learning rate, whether to use dropout, how much weight decay. These are hyperparameters - the model can't learn them, you choose them. The discipline is: change one thing, measure, compare. In the notebook we'll run multiple experiments and see that some settings overfit fast while others learn slowly but steadily.
+### Step 5: Train
+
+Same training loop from L5 - forward, loss, backward, update - but now running over batches from a DataLoader. **Class imbalance** gets handled here with `pos_weight` in the loss function, making the model care more about the minority class instead of always predicting "no."
+
+### Step 6: Tune hyperparameters
+
+Neuron count, learning rate, dropout, weight decay - these are **hyperparameters** the model can't learn on its own. We experiment systematically: no regularization (overfits fast), heavy regularization (underfits), balanced (sweet spot). Then sweep each parameter individually. We also introduce **early stopping** - stop training when validation loss stops improving.
+
+### Step 7: Evaluate
+
+This is where most beginners stop too early. Accuracy alone is misleading with imbalanced data - a model predicting "no" for everything gets 88%. We need the full picture: **confusion matrix** (where exactly does the model get it right and wrong), **precision** (don't cry wolf), **recall** (don't miss real positives), **F1** (balances both), and **AUC-ROC** (overall ranking quality using raw probabilities, not thresholds).
+
+Which metric matters most depends on the business. Missing a subscriber vs wasting a phone call are different costs - the model doesn't know your priorities, that decision is yours.
 
 ## Terminology
 
@@ -62,19 +69,9 @@ Think of it like building a web app. You wouldn't ship a FastAPI endpoint withou
 
 ## Resources
 
-### Course video
+Once again, there isn't much content related to tabular data with neural networks, perhaps some payed courses might have that, but not on youtube or articles, thus the lesson will be extra important, and your own prompting doing the homework will be even more important.
 
-TBA
-
-### Before the lesson
-
-- StatQuest - Confusion Matrix (6 min, clear visual breakdown of true positives, false positives, and the full matrix): https://www.youtube.com/watch?v=Kdsp6soqA7o
-- StatQuest - Sensitivity and Specificity (12 min, builds from the confusion matrix to precision/recall concepts): https://www.youtube.com/watch?v=vP06aMoz4v8
-- StatQuest - Cross Validation (6 min, explains why a single split isn't enough and how k-fold works): https://www.youtube.com/watch?v=fSytzGwwBVw
-- StatQuest - ROC and AUC (16 min, explains how to evaluate classifiers beyond accuracy using the ROC curve): https://www.youtube.com/watch?v=4jRBRDbJemM
-
-### Documentation and tutorials
-
+- I’d say keep watching this series - but remember, we’ll focus on tabular data here and not images https://www.youtube.com/watch?v=EMXfZB8FVUA&list=PLqnslRFeH2UrcDBWF5mfPGpqQDSta6VK4
 - PyTorch Dataset & DataLoaders tutorial (official docs, walks through building custom datasets and batching): https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html
 - PyTorch classification from scratch (step-by-step dense neural network for classification): https://www.slingacademy.com/article/pytorch-classification-from-scratch-building-a-dense-neural-network/
 - PyTorch for tabular data with categorical embeddings (the embedding approach we use in the notebook): https://yashuseth.wordpress.com/2018/07/22/pytorch-neural-network-for-tabular-data-with-categorical-embeddings/
@@ -88,3 +85,4 @@ TBA
 ### Additional reading
 
 - Machine Learning Mastery - What is a Confusion Matrix (article, walks through the matrix with examples): https://machinelearningmastery.com/confusion-matrix-machine-learning/
+- PyTorch Tabular Binary Classification (simpler version of what we do in the notebook - same pattern with Dataset/DataLoader/BCEWithLogitsLoss but on a small all-numerical dataset, no embeddings. Good warmup if you want to see the basic pipeline before tackling the full notebook): https://medium.com/data-science/pytorch-tabular-binary-classification-a0368da5bb89

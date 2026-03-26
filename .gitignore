@@ -34,3 +34,7 @@ Thumbs.db
 
 # Large datasets (downloaded at runtime)
 data/creditcard/
+
+# Bulldozer dataset (large files, built from Train.7z at runtime)
+data/bluebook-for-bulldozers/Train.csv
+data/bluebook-for-bulldozers/TrainAndValid.csv

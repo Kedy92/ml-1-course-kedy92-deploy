@@ -1,45 +1,54 @@
 # L07: Trees - Random Forests & Gradient Boosting
 
-In Lesson 6, we built a full pipeline for tabular data using an MLP with embeddings. We dealt with missing values, encoded categories, scaled features, handled class imbalance, and evaluated with proper metrics. The MLP worked, but here's the honest truth: for tabular data, tree-based models often win. They're faster to train, easier to interpret, need less preprocessing, and frequently deliver equal or better accuracy. This lesson is about giving you the right tool for the job.
+In L5 and L6, we built neural networks for tabular data - first understanding the mechanics, then building a full pipeline with embeddings, preprocessing, and evaluation. The MLP worked. But here's the honest truth: for tabular data, tree-based models often win. They're faster to train, easier to interpret, need less preprocessing, and frequently deliver equal or better accuracy.
 
-We'll build decision trees, random forests, and gradient boosting models (XGBoost, LightGBM, CatBoost) on a real dataset and compare them head-to-head with the MLP approach from L6. The goal isn't to pick a favorite - it's to understand when each approach makes sense. By the end, you'll have a practical framework: try trees first on tabular, use neural nets for images and text, and always compare.
+This lesson introduces a completely different family of algorithms. All of these algorithms work for both regression (predicting a number) and classification (predicting a category) - the core logic is the same, only the scoring function changes. The notebook focuses on regression (predicting bulldozer prices), but everything you learn applies directly to classification too.
+
+We start with **decision trees** - the simplest tree model and the foundation everything else builds on. A single decision tree is easy to understand but overfits badly. So we fix that with **random forests**, which combine hundreds of trees to cancel out individual mistakes. Then we move to **gradient boosting**, where trees are built sequentially, each one correcting the errors of the previous ones. Gradient boosting (XGBoost, LightGBM, CatBoost) is what dominates Kaggle competitions and real-world tabular ML - it’s generally the best-performing approach for structured data. But again, neural networks could actually still be better - so this is just another toolkit in our toolbox, and it’s a really lovely one, but most machine learning engineers would then end up trying both to see which one is performing the best.
 
 ## Key Concepts
 
-**Decision Trees** - the building block of everything in this lesson. A decision tree makes predictions by asking a series of yes/no questions. "Is the year made before 2000?" If yes, go left. If no, go right. Keep splitting until you reach a leaf, which holds the prediction (the average value of all training samples that ended up there).
+### Decision Trees - the foundation
 
-The tree algorithm picks splits automatically by testing every feature at every possible threshold, choosing the one that creates the most homogeneous groups. For regression, "homogeneous" means low variance (prices within each group are similar). For classification, it means low Gini impurity (most samples in each group belong to the same class).
+Everything in this lesson builds on decision trees, so it's worth understanding them well before moving on.
 
-Pros: interpretable (you can read the rules), no preprocessing needed (trees don't care about scale), handles missing values. Cons: a single deep tree overfits badly - it memorizes the training data by creating leaves with just a few samples each.
+A decision tree makes predictions by asking a series of yes/no questions. "Is the year made before 2000?" If yes, go left. If no, go right. Keep splitting until you reach a leaf. For regression (predicting a number like price), each leaf holds the average value of the training samples that ended up there. For classification (predicting a category), each leaf holds the majority class. The tree algorithm picks splits automatically by testing every feature at every possible threshold, choosing the one that creates the most homogeneous groups - measured by variance for regression, or Gini impurity for classification.
 
-**Random Forests** - the fix for overfitting. Train many decision trees (typically 100+), each on a random subset of the data (bootstrap sampling) using a random subset of features at each split. Then average their predictions.
+The appeal of decision trees is that you can read them. You can look at the splits and understand exactly why the model made a prediction. They also need almost no preprocessing - no normalization, no encoding, they handle missing values naturally. But a single deep tree has a serious problem: it overfits. Given enough depth, a tree will create a leaf for every single training example, memorizing the data perfectly while learning nothing that generalizes to new data.
 
-Why does averaging work? Each tree sees different data and different features, so they make different mistakes. When you average many uncorrelated errors, they tend to cancel out. The result is a model that's much more stable and accurate than any single tree. It's the same principle as asking 100 people to estimate the weight of a cow - the average is usually better than any individual guess.
+### Random Forests - fixing overfitting with ensembles
 
-**Bagging (Bootstrap Aggregating)** - the technique behind random forests. Draw N samples with replacement from N training samples. Some samples appear multiple times, roughly 37% don't appear at all. Train a tree on each bootstrap sample. The samples that didn't appear become the "out-of-bag" (OOB) set - a free validation set for each tree.
+The solution to a single tree's overfitting problem is to build many trees and average their predictions. That's a random forest.
 
-**Out-of-Bag Error** - for each training sample, some trees never saw it during training. We can collect predictions from only those trees and get a validation-like score without setting aside any data. Useful when data is limited. For time-series data, use a proper temporal split instead.
+Each tree is trained on a slightly different version of the data (a **bootstrap sample** - random sampling with replacement, so each tree sees about 63% of the data). At each split, the tree only considers a random subset of features. This randomness means each tree makes different mistakes. When you average 100 trees that make uncorrelated errors, those errors tend to cancel out - the same principle as asking 100 people to estimate something and taking the average.
 
-**Feature Importance** - random forests track how much each feature contributes to reducing prediction error across all trees. This tells you which features matter most. In the notebook, we'll see that a handful of features dominate while dozens contribute almost nothing - a common pattern that lets us simplify the model.
+Random forests also give you useful things for free. **Feature importance** tells you which features contribute most to predictions across all trees - typically a handful dominate while most contribute almost nothing. **Out-of-bag (OOB) error** gives you a validation score without setting aside any data, since each tree has ~37% of samples it never trained on. And the spread of predictions across the 100 trees gives you **prediction confidence** - if all trees agree, you can trust the prediction; if they disagree, route it to human review.
 
-**Prediction Confidence** - since a random forest is 100 trees each giving their own prediction, the spread (standard deviation) of those predictions tells you how confident the model is. Low spread means the trees agree - high confidence. High spread means they disagree - the model is uncertain. This is practically useful: in production, you can route uncertain predictions to human review.
+### Gradient Boosting - learning from mistakes
 
-**Gradient Boosting** - a different ensemble strategy. Instead of training trees independently and averaging (random forest), train trees sequentially. Each new tree focuses specifically on the errors of all previous trees combined. Tree 1 makes predictions. Tree 2 predicts the residuals (mistakes) of tree 1. Tree 3 predicts the residuals of trees 1+2 combined. Stack enough trees and the ensemble gets very accurate.
+Random forests build trees independently and average them. Gradient boosting takes a different approach: build trees sequentially, where each new tree specifically targets the errors the previous trees made.
 
-The tradeoff: gradient boosting is more powerful but also more fragile. It can overfit if you add too many trees or use too high a learning rate. That's why early stopping is essential - monitor validation performance and stop adding trees when it stops improving.
+It starts with a simple prediction (the average value). Then it calculates the residuals - how far off each prediction is from the truth. It trains a small tree to predict those residuals. It adds that tree's predictions to the running total, scaled down by a **learning rate** (typically 0.05-0.1) so each tree takes a small step rather than overcorrecting. Then it calculates new residuals and trains another tree. Repeat hundreds or thousands of times, each tree nudging the predictions a little closer to the truth.
 
-**XGBoost, LightGBM, CatBoost** - three popular implementations of gradient boosting. XGBoost is the battle-tested standard. LightGBM is faster (great for quick experiments). CatBoost handles categorical features natively. In practice, the differences in accuracy are usually small - good feature engineering matters more than library choice.
+The tradeoff: gradient boosting is more powerful than random forests but also more fragile. Too many trees or too high a learning rate and it overfits. That's why **early stopping** is essential - monitor validation performance and stop adding trees when it stops improving. This is probably the single most important practical tip for gradient boosting.
 
-**SHAP (SHapley Additive exPlanations)** - goes beyond feature importance. Instead of "which features matter globally?", SHAP answers "why did the model make this specific prediction?" For each prediction, SHAP shows how each feature pushed the prediction up or down from the average. A waterfall plot shows one prediction decomposed. A beeswarm plot shows patterns across all predictions.
+### The libraries: XGBoost, LightGBM, CatBoost
 
-**When to Use What** - a practical decision framework:
-- Tabular data: try trees first. They're fast, need minimal preprocessing, and often best
-- Images/text/audio: neural nets. Trees can't handle spatial or sequential structure
-- Small data: trees. They need fewer samples to learn useful patterns
-- Interpretability matters: trees or SHAP on top of gradient boosting
+Three popular implementations of gradient boosting. **XGBoost** is the battle-tested standard that dominated Kaggle for years. **LightGBM** is faster (great for quick experiments and large datasets). **CatBoost** handles categorical features natively without manual encoding. In practice, the accuracy differences between them are usually tiny - good feature engineering matters far more than library choice. The notebook compares all three side by side.
+
+### Interpretability with SHAP
+
+One of the biggest advantages of tree-based models is that we can look inside them. **Feature importance** tells us which features matter globally. **SHAP (SHapley Additive exPlanations)** goes further and answers "why did the model make *this specific prediction*?" For each prediction, SHAP shows how each feature pushed the result up or down from the average. A waterfall plot decomposes one prediction. A beeswarm plot shows patterns across all predictions. This kind of interpretability is much harder to get from neural networks.
+
+### When to use what
+
+- **Tabular data**: try trees first. They're fast, need minimal preprocessing, and often best
+- **Images/text/audio**: neural nets. Trees can't handle spatial or sequential structure
+- **Small data**: trees. They need fewer samples to learn useful patterns
+- **Interpretability matters**: trees, or SHAP on top of gradient boosting
 - Always worth trying both and comparing honestly
 
-**Tree Extrapolation Limitation** - trees can only predict values within the range they saw during training. If training prices go up to $100k, the tree can never predict $150k. Neural nets don't have this constraint. Keep this in mind with time-series or trend data.
+One important limitation to keep in mind: **trees can't extrapolate**. A tree's prediction is always within the range of values it saw during training. If training prices go up to $100k, the tree can never predict $150k. Neural nets don't have this constraint. This matters with time-series or trend data.
 
 ## Terminology
 
@@ -67,25 +76,27 @@ The tradeoff: gradient boosting is more powerful but also more fragile. It can o
 
 ## Resources
 
-### Course video
+This lesson by Jeremy Howard in the fastai course is a great place to start with tree models:
 
-TBA
+- The first lecture which you can start watching from 1:26:40 https://www.youtube.com/watch?v=_rXzeWq4C6w&list=PLfYUBJiXbdtSvpQjSnJJ_PmDQB_VyT5iU&index=5
+- And the continuation of that lecture all the way up until 52 minutes https://www.youtube.com/watch?v=AdhG64NF76E&list=PLfYUBJiXbdtSvpQjSnJJ_PmDQB_VyT5iU&index=8
 
-### Before the lesson
+They are based on a lecture notebook which is included in your repository in the fastai_course_notebooks just for convenience (*07-how-random-forests-really-work.ipynb*) and *09_tabular.ipynb*, which is from his book “fastbook” which is more theory heavy but is worth reading. Note that the 07 notebook uses the Titanic dataset for classification, which is a nice complement to our lesson notebook that focuses on regression (bulldozer prices). Once you’ve gone through these, the UA course lecture notebook will be better since its quite similar, but is more realistic, and streamlined - it mixes theory, but it also goes more into depth on gradient boosted trees, as they are generally more favored in real projects.
 
-- StatQuest - Decision and Classification Trees, Clearly Explained (18 min, excellent visual walkthrough of how trees split data using Gini impurity, a must-watch before the lesson): https://www.youtube.com/watch?v=_L39rN6gz7Y
-- StatQuest - Random Forests Part 1: Building, Using and Evaluating (10 min, builds from decision trees to the full random forest concept): https://www.youtube.com/watch?v=J4Wdy0Wc_xQ
+### Other videos that can be great to get different perspectives
+
+- StatQuest - Decision and Classification Trees, Clearly Explained (18 min, excellent visual walkthrough of how trees split data using Gini impurity, a must-watch before the lesson): https://www.youtube.com/watch?v=_L39rN6gz7Y → He has more videos on decision trees, you don’t have to watch them, but at some point you may want to deepdive.
+- StatQuest - Random Forests Part 1: Building, Using and Evaluating (10 min, builds from decision trees to the full random forest concept): https://www.youtube.com/watch?v=J4Wdy0Wc_xQ → Decision trees are the foundation of tree based models, but random forests is a clear usable algorithm that actually uses decision trees (think of it like creating massive amounts of decision trees, we call those random forests)
 - StatQuest - Regression Trees, Clearly Explained (9 min, how trees handle continuous targets instead of categories): https://www.youtube.com/watch?v=g9c66TUylZ4
-
-### Deep dives
-
-- Random Forests (fastai lesson, ~90 min, Jeremy Howard walks through random forests on the bulldozer dataset - the same dataset we use in the notebook): https://www.youtube.com/watch?v=AdhG64NF76E&list=PLfYUBJiXbdtSvpQjSnJJ_PmDQB_VyT5iU&index=7
 - Gradient Boosted Trees (StatQuest, 15 min, explains the sequential learning process clearly - watch after understanding decision trees and random forests): https://www.youtube.com/watch?v=3CC4N4z3GJc
 - Gradient Boosting for classification (StatQuest, 11 min, extends the regression explanation to classification tasks): https://www.youtube.com/watch?v=jxuNLH5dXCs
+- Gradient Boosted Trees https://www.youtube.com/watch?v=PxgVFp5a0E4
 
-### Model interpretation
+### Model interpretation - These are great and easy to understand
 
-- SHAP - Model Interpretation (22 min, visual explanation of SHAP values and how to read the plots we use in the notebook): https://www.youtube.com/watch?v=MQ6fFDwjuco
+Tree-based algorithms are great because we can peak inside of them to see what they actually do, unlike neural networks.
+
+- SHAP - Model Interpretation (visual explanation of SHAP values and how to read the plots we use in the notebook): https://www.youtube.com/watch?v=MQ6fFDwjuco
 - Model Interpretable vs Explainable (short, clarifies the difference between models you can read directly vs models you need tools to explain): https://www.youtube.com/watch?v=VY7SCl_DFho
 
 ### Documentation
@@ -95,7 +106,3 @@ TBA
 - XGBoost documentation (getting started guide and parameter tuning): https://xgboost.readthedocs.io/en/latest/
 - LightGBM documentation (quick start and key differences from XGBoost): https://lightgbm.readthedocs.io/en/latest/
 - SHAP documentation (Python library for model interpretation, includes tutorial notebooks): https://shap.readthedocs.io/en/latest/
-
-### Additional videos
-
-- Gradient Boosted Trees overview (StatQuest, 10 min, covers the core idea of gradient boosting at a higher level): https://www.youtube.com/watch?v=PxgVFp5a0E4
