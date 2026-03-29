@@ -6,17 +6,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastai.vision.all import load_learner
 
 from app.config import settings
-from app.database import engine, Base
 from app import predict as predict_module
 from app.predict import router as predict_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: create tables and load model
-    Base.metadata.create_all(bind=engine)
-
-    model_path = Path(settings.models_dir) / "pet_classifier.pkl"
+    model_path = Path(settings.models_dir) / settings.model_filename
     print(f"Loading model from {model_path}...")
     predict_module.learn = load_learner(model_path)
     print(f"Model loaded. Classes: {predict_module.learn.dls.vocab}")
@@ -24,7 +20,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="Pet Classifier API", lifespan=lifespan)
+app = FastAPI(title="Image Classifier API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

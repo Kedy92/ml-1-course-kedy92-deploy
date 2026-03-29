@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: cifar10-classifier-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./lessons/intro/02_building_a_model/classifier_deploy/docker/Dockerfile.api
+    dockerContext: ./lessons/intro/02_building_a_model/classifier_deploy
+    healthCheckPath: /health
+    autoDeployTrigger: commit

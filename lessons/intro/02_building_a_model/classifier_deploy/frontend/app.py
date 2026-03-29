@@ -1,13 +1,13 @@
 import streamlit as st
 import requests
 from PIL import Image
-import io
+import os
 
-API_URL = "http://api:8000/predict"
+API_URL = os.getenv("API_URL", "http://localhost:8000/predict")
 
-st.set_page_config(page_title="Pet Breed Classifier", layout="centered")
-st.title("Pet Breed Classifier")
-st.write("Upload a photo of a cat or dog and the model will predict its breed.")
+st.set_page_config(page_title="CIFAR10 Classifier", layout="centered")
+st.title("CIFAR10 Classifier")
+st.write("Upload an image and the model will predict its CIFAR10 class.")
 
 uploaded_file = st.file_uploader("Choose an image", type=["jpg", "jpeg", "png"])
 
@@ -17,10 +17,15 @@ if uploaded_file is not None:
 
     with st.spinner("Classifying..."):
         uploaded_file.seek(0)
-        response = requests.post(
-            API_URL,
-            files={"file": ("image.jpg", uploaded_file.getvalue(), "image/jpeg")},
-        )
+        try:
+            response = requests.post(
+                API_URL,
+                files={"file": ("image.jpg", uploaded_file.getvalue(), "image/jpeg")},
+                timeout=60,
+            )
+        except requests.RequestException as exc:
+            st.error(f"Could not reach API at {API_URL}: {exc}")
+            st.stop()
 
     if response.status_code == 200:
         result = response.json()
@@ -33,9 +38,9 @@ if uploaded_file is not None:
         sorted_probs = sorted(
             result["probabilities"].items(), key=lambda x: x[1], reverse=True
         )[:5]
-        breeds = [b.replace("_", " ").title() for b, _ in sorted_probs]
+        classes = [b.replace("_", " ").title() for b, _ in sorted_probs]
         probs = [p for _, p in sorted_probs]
 
-        st.bar_chart(dict(zip(breeds, probs)))
+        st.bar_chart(dict(zip(classes, probs)))
     else:
         st.error(f"API error: {response.status_code} — {response.text}")

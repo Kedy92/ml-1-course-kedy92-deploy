@@ -1,12 +1,8 @@
 import io
 import time
 
-from fastapi import APIRouter, File, UploadFile, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, File, UploadFile
 from fastai.vision.all import PILImage
-
-from app.database import get_db
-from app.models import Prediction
 
 router = APIRouter()
 
@@ -15,7 +11,7 @@ learn = None
 
 
 @router.post("/predict")
-def predict(file: UploadFile = File(...), db: Session = Depends(get_db)):
+def predict(file: UploadFile = File(...)):
     start = time.perf_counter()
 
     image_bytes = file.file.read()
@@ -28,16 +24,6 @@ def predict(file: UploadFile = File(...), db: Session = Depends(get_db)):
         learn.dls.vocab[i]: round(float(p), 4)
         for i, p in enumerate(probs)
     }
-
-    # Log to database
-    db_prediction = Prediction(
-        prediction=str(pred),
-        confidence=float(probs[idx]),
-        probabilities=probabilities,
-        processing_time_ms=processing_time_ms,
-    )
-    db.add(db_prediction)
-    db.commit()
 
     return {
         "prediction": str(pred),

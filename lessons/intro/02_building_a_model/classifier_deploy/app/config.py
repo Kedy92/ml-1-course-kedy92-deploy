@@ -2,8 +2,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql://petapp:petapp@db:5432/petapp"
     models_dir: str = "models"
+    model_filename: str = "cifar10_classifier.pkl"
 
     class Config:
         env_file = ".env"
