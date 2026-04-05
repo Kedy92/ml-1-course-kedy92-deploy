@@ -105,6 +105,7 @@ On the same dataset, the CNN achieves higher accuracy with fewer parameters. The
 ### Videos
 - Watch all of the videos on CNN's from this playlist: https://www.youtube.com/playlist?list=PLTKMiZHVd_2KJtIXOW0zFhFfBaJJilH51 (L13 videos, e.g L13.1, L13.2, L13.3)
 First video in the section: https://www.youtube.com/watch?v=i-Ngb6tn_KM&list=PLTKMiZHVd_2KJtIXOW0zFhFfBaJJilH51&index=98
+- This playlist is also great starting from his videos on "what are convulition layers" https://www.youtube.com/playlist?list=PLN8j_qfCJpNhhY26TQpXC5VeK-_q3YLPa
 
 - CNN intro (clear visual walkthrough of convolutions and pooling): https://www.youtube.com/watch?v=pj9-rr1wDhM
 - Alternative CNN intro (different angle, good for reinforcement): https://www.youtube.com/watch?v=HGwBXDKFk9I

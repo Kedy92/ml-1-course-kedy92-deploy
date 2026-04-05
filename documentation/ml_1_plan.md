@@ -27,26 +27,21 @@ https://www.youtube.com/watch?v=EMXfZB8FVUA&list=PLqnslRFeH2UrcDBWF5mfPGpqQDSta6
 
 ## Quick Overview
 
-Possible changes:
-
-- Remove one CNN-lesson
-
-| Lesson | Focus |  |
-| --- | --- | --- |
-| L1 | The Hook: Tour of ML |  |
-| L2 | The Hook: First Model (fastai) |  |
-| L3 | Foundations: Regression + Gradient Descent |  |
-| L4 | Foundations: Classification → Neural Nets (Top-Down) |  |
-| L5 | MLPs: Forward Pass + Training Loop |  |
-| L6 | MLPs: Full Tabular Pipeline |  |
-| L7 | Trees: Random Forests & Gradient Boosting |  |
-| L8 | Project Assistance (no new content) |  |
-| L9 | Images: Complete Pipeline with MLP |  |
-| L10 | Images: MLP Practice (CIFAR-10) |  |
-| L11 | CNNs: Concept & Architecture |  |
-| L12 | CNNs: Fine-Tuning & Deployment |  |
-| L13 | Transfer Learning & Projects |  |
-| L14-L19 | Modern Stack (LLMs, Embeddings, RAG) |  |
+| Lesson | Focus | Dataset | Key Output |
+| --- | --- | --- | --- |
+| L1 | The Hook: Tour of ML | Titanic, Pet breeds, Movie reviews | Three live demos across data types |
+| L2 | First Model (fastai) | Oxford-IIIT Pets (37 breeds) | Working image classifier, deployed via Streamlit + FastAPI + Docker |
+| L3 | Regression + Gradient Descent | California Housing | Linear regression from scratch in NumPy, then PyTorch |
+| L4 | Classification + Neural Nets | Titanic | Logistic regression -> MLP, decision boundary comparison |
+| L5 | Inside the Neural Network | Titanic (4 features) | Forward pass trace, backprop, weight updates visualized |
+| L6 | Full Tabular Pipeline | Bank marketing (imbalanced) | End-to-end PyTorch pipeline: preprocessing -> DataLoader -> train -> evaluate |
+| L7 | Trees: Random Forests + Gradient Boosting | Bulldozer prices | Decision trees, XGBoost/LightGBM, SHAP interpretability |
+| L8 | Project Assistance | (student projects) | No new content, consolidation before images |
+| L9 | Images: MLP Pipeline (guided) | Bird photos (5 classes) | Full image pipeline, softmax/CE, augmentation, pixel shuffle experiment |
+| L10 | Images: MLP Practice | CIFAR-10 (10 classes) | Regularization experiments (dropout, weight decay, BatchNorm, LR scheduling) |
+| L11 | CNNs: Concept + Architecture | MNIST + Bird photos | CNN from scratch, batchnorm, 1cycle, CNN vs MLP comparison on birds (~81% vs ~55%) |
+| L12 | Fine-Tuning + Deployment | TBD | Fine-tune pretrained CNN, YOLO intro, deploy as API |
+| L13+ | Modern Stack (LLMs, Embeddings, RAG) | TBD | LLM APIs, embeddings, vector DBs, RAG |
 
 ---
 
@@ -339,112 +334,109 @@ Essentially,
 
 ## Images & CNNs
 
-### Lesson 9: Images — The Complete Pipeline with MLP
+### Lesson 9: Images - The Complete Pipeline with MLP (guided)
 
-**Focus:** Teach the full image classification pipeline end-to-end. Same MLP architecture from tabular, applied to images. Demonstrate everything CIFAR-10 hides from you.
+**Status: DONE**
 
-**Topics:**
+**Focus:** Full image classification pipeline end-to-end. Same MLP architecture from tabular, applied to images. Demonstrates the MLP's ceiling on images.
 
-- Images as data: pixels, RGB channels, flattening
-- Data cleaning: verify images load, handle corrupted files
-- Resizing strategies: squash vs crop vs resize+crop
-- `transforms.Compose()` pipeline (compare to pandas preprocessing)
-- Per-channel normalization: compute mean/std per RGB channel (like StandardScaler)
-- Data augmentation: flip, rotation, color jitter, random crop
-- Visual verification: always check your pipeline before training
-- Multi-class classification: softmax + CrossEntropyLoss (traced with real numbers)
-- MLP architecture: flatten + linear layers, parameter explosion
-- LR finder, training loop with model.train()/eval()
+**What's taught:**
+- Images as data: pixels, RGB channels, NCHW tensors, flattening
+- From binary (sigmoid/BCE) to multi-class: softmax + CrossEntropyLoss (traced with -log curve)
+- Full pipeline: loading/cleaning -> resizing -> augmentation -> per-channel normalization -> training -> evaluation
+- Custom PyTorch Dataset class (__len__ + __getitem__)
+- LR finder, ReduceLROnPlateau, early stopping
 - Evaluation: confusion matrix, per-class accuracy, top losses analysis
-- MLP limitations: pixel shuffle experiment (zero spatial awareness)
-- CNN teaser: fewer params, better accuracy, spatial awareness
+- MLP limitations: pixel shuffle experiment (proves no spatial awareness), parameter explosion (25M params for 128x128)
+- CNN teaser: vision tasks landscape, transfer learning callback to L1/L2
 
-**Terminology introduced:** softmax, multi-class classification, data augmentation, per-channel normalization, transforms pipeline, top losses
+**Dataset:** Bird photos (5 classes: eagle, flamingo, owl, parrot, penguin) - auto-downloaded from GitHub Releases
 
-**Dataset:** Bird photos (5 classes: eagle, flamingo, owl, parrot, penguin) — web-scraped, messy, forces every pipeline step
+**Notebook:** `lessons/neural_networks_images/09_and_10/09/testing/09_mlp_image_classification.ipynb`
 
-**Notebook:** `08_v2_mlp_image_classification.ipynb`
+**Lecture notes:** `lecture_notes/09_and_10_images_mlp_pipeline/lecture_notes_2026_04_05.md`
 
-### Lesson 10: Images — MLP Practice (CIFAR-10)
+### Lesson 10: Images - MLP Practice (self-directed)
 
-**Focus:** Students practice image classification independently on CIFAR-10. Experiment with architectures, hyperparameters, regularization.
+**Status: DONE**
 
-**Topics:**
+**Focus:** Practice and regularization. Students apply the L9 pipeline independently and experiment with techniques to push MLP accuracy higher.
 
-- Apply pipeline from L9 to a new dataset (CIFAR-10, 10 classes)
-- Architecture experimentation: width, depth, activation functions
-- Hyperparameter tuning: learning rate, batch size, epochs
-- Regularization: dropout, weight decay, batch normalization
-- Reading loss curves: diagnosing overfitting vs underfitting
-- Compare multiple model variants
-- Observe MLP ceiling on images: "We've pushed it as far as it goes"
-
-**Terminology introduced:** learning rate scheduler, weight decay, regularization strategies
+**What's taught:**
+- Apply pipeline to CIFAR-10 (10 classes)
+- 5 model versions, each adding one technique: baseline -> dropout -> BatchNorm -> combined -> max effort
+- Regularization: dropout, weight decay (L2), BatchNorm
+- Optimizers: SGD with momentum vs Adam
+- LR strategies: ReduceLROnPlateau, cosine annealing
+- Activation functions: LeakyReLU
+- Weight initialization: Kaiming
+- Experimentation discipline: change one thing at a time
+- Result: MLP plateaus around 55% regardless of tuning
 
 **Dataset:** CIFAR-10 (10 classes, 32x32 RGB)
 
-**Notebook:** `08_mlp_image_classification_project.ipynb`
+**Notebook:** `lessons/neural_networks_images/09_and_10/10/testing/10_mlp_image_classification_project.ipynb`
 
-### Lesson 11: CNNs — Concept & Architecture
+### Lesson 11: CNNs - Concept + Architecture
 
-Resources:
-A decent intro:
-https://www.youtube.com/watch?v=pj9-rr1wDhM 
-Or this one:
-https://www.youtube.com/watch?v=HGwBXDKFk9I
-A more practical example using excel, although the example is a bit small unfortunately and doesnt really showcase it using pytorch - From minute 44~, where he talks about convolutions:
-https://www.youtube.com/watch?v=htiNBPxcXgo
+**Status: DONE**
 
+**Focus:** Build CNN from scratch in pure PyTorch. Diagnose training instability. Apply CNN to the same bird dataset from L9.
 
-**Focus:** Why CNNs work for images, understand convolutions, build and train a CNN from scratch in pure PyTorch.
+**What's taught:**
+- Hand-crafted edge detection kernels on MNIST digit (manual convolution step by step)
+- F.conv2d: applying multiple kernels to batches of images in parallel
+- Padding (preserve spatial size) and stride (halve spatial size)
+- Building a CNN: conv helper (Conv -> BN -> ReLU), stride-2 layers
+- 3s vs 7s binary classification with CNN (99%+ accuracy)
+- Full MNIST 10-class: activation collapse diagnosis using per-layer stats
+- Training stability experiments: batch size, 1cycle LR, batchnorm
+- Batchnorm deep dive: simulation + real activation distributions
+- Conv -> BN -> ReLU ordering comparison (3-row visualization)
+- Color images: RGB convolution explained with CIFAR-10 examples
+- Receptive fields: how deeper layers "see" more of the input
+- CNN on bird dataset: 394K params, ~81% accuracy (vs MLP's 25M params, ~55%)
+- Questionnaire covering all notebook topics
 
-**Topics:**
+**Datasets:** MNIST (grayscale, 3s vs 7s + full 10-class), CIFAR-10 (RGB visualization only), Bird photos (5 classes, same as L9)
 
-- Why MLPs struggle: parameter explosion + no spatial awareness (recap from L9)
-- Convolution operation: kernels/filters sliding over image
-- Feature maps: what kernels detect, how to read them
-- Channels: how kernels grow a depth dimension to match input channels (RGB, then learned features)
-- Stride 2: shrinking spatial dimensions, replacing max pooling
-- The architecture pattern: spatial shrinks, channels grow, funnel to prediction
-- Build CNN from scratch in PyTorch (`nn.Conv2d`, custom `conv` helper)
-- Training stability: diagnosing with activation statistics, batch normalization, 1cycle LR scheduling
-- Compare: CNN vs MLP on same dataset (fewer params, higher accuracy)
-- Brief overview of famous architectures: ResNet (skip connections), EfficientNet (conceptual only)
+**Notebooks:**
+- `lessons/neural_networks_images/11_cnns/testing/L11_cnns.ipynb` - main teaching notebook
+- `lessons/neural_networks_images/11_cnns/homework/modified/project_oxford_pets.ipynb` - example project
+- `lessons/neural_networks_images/11_cnns/homework/modified/cnn_project_starting_instructions.ipynb` - homework
 
-**Dataset:** CIFAR-10 (32x32 color, 10 classes) or birds from L9 — compare directly to MLP results
+**Lecture notes:** `lecture_notes/11_cnns/lecture_notes_v3_2026_04_05.md`
 
-**Notebook:** Pure PyTorch, no fastai. Teaching notebook style.
+### Lesson 12: Fine-Tuning + Deployment
 
-### Lesson 12: Fine-Tuning, Object Detection & Deployment
+**Status: TODO**
 
-**Focus:** The practical "real world" image lesson. Fine-tune pretrained models, introduce object detection with YOLO, deploy via FastAPI. Closes the image section.
+**Focus:** The practical "real world" image lesson. Fine-tune pretrained models, introduce object detection, deploy via FastAPI. Closes the image section (Phase 2).
 
-**Topics:**
+**Planned topics:**
 
-Part 1 — Fine-tuning pretrained models:
-- Why train from scratch when someone already did?
+Part 1 - Fine-tuning pretrained models:
+- Why train from scratch when someone already did? (callback to L1/L2 fastai fine-tuning)
 - Pretrained models in torchvision (ResNet, EfficientNet)
 - Feature extraction: freeze backbone, train new head
 - Fine-tuning: unfreeze layers, lower LR
-- Fine-tune on custom dataset, compare accuracy vs from-scratch CNN (dramatic difference)
+- Fine-tune on bird dataset, compare accuracy vs L11's from-scratch CNN (~81%) - dramatic improvement
 
-Part 2 — Object detection with YOLO:
+Part 2 - Object detection with YOLO:
 - Classification vs detection: "what is this?" vs "where is everything?"
 - YOLO as a practical tool (focus on usage, not internals)
-- Load pretrained YOLOv8, run inference on images
-- Fine-tune YOLO on a custom dataset (e.g. defect detection, document elements)
-- Why this matters: most common commercial CV task (quality control, warehouse, retail, documents)
+- Load pretrained YOLOv8, run inference
+- Fine-tune on custom dataset
 
-Part 3 — Deployment:
-- Save model: `torch.save()`, `state_dict()`
-- FastAPI endpoint: accept image → preprocess → predict → return
+Part 3 - Deployment:
+- Save model: torch.save(), state_dict()
+- FastAPI endpoint: accept image -> preprocess -> predict -> return
 - Containerize with Docker
-- Deploy to AWS EC2 instance
-- Production considerations: input validation, error handling
+- Production considerations
 
-**Outcome:** Students fine-tune a pretrained classifier AND a YOLO detector, then deploy one as a working API
+**Outcome:** Students fine-tune a pretrained classifier AND run YOLO detection, deploy as a working API
 
-**Reference:** `/home/ua-tobias/projects/ml_projects/modified/model_api` (prior deployment project)
+**Lecture notes:** `lecture_notes/12_finetuning_and_deployment/lecture_notes_2026_03_14.md` (stub, needs expansion)
 
 ---
 

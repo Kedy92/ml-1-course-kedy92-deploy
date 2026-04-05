@@ -33,6 +33,32 @@ Thumbs.db
 .idea/
 
 
+# Model weights and exports (downloaded or trained at runtime)
+*.pt
+*.pth
+*.onnx
+*.onnx.data
+*.pkl
+
+# YOLO/ultralytics artifacts (generated during training/inference)
+runs/
+datasets/
+bus.jpg
+yolo*.yaml
+
+# Experiment notebooks - data downloaded at runtime (EuroSAT, Flowers, etc.)
+experiments/data/
+experiments/*.pt
+experiments/*.pth
+
+# torchvision/torchgeo downloaded datasets (auto-download at runtime)
+**/data/eurosat/
+**/data/EuroSAT/
+**/data/flowers-102/
+**/data/Flowers102/
+**/data/SplitDatasets/
+**/data/stl10*/
+
 # Large datasets (downloaded at runtime)
 data/creditcard/
 

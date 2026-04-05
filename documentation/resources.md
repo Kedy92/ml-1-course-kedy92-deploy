@@ -5,6 +5,7 @@ A collection of useful videos, articles, and tools organized by topic. These are
 ## Courses / Playlists
 
 - Super good playlist by Sebastian Raschka with a ton of good videos on ML, where he uses a pytorch a lot: https://www.youtube.com/playlist?list=PLTKMiZHVd_2KJtIXOW0zFhFfBaJJilH51
+- This one is also great and its fairly new and also leads into transformers, which is great!: https://www.youtube.com/playlist?list=PLN8j_qfCJpNhhY26TQpXC5VeK-_q3YLPa
 - fast.ai Practical Deep Learning - Lesson 1: https://course.fast.ai/Lessons/lesson1.html
 - fast.ai Practical Deep Learning - Lesson 2 (deployment and production): https://course.fast.ai/Lessons/lesson2.html
 - Kaggle Learn - Intro to Machine Learning: https://www.kaggle.com/learn/intro-to-machine-learning

@@ -8,8 +8,9 @@ ML course material for Utvecklarakademin. Notebooks, datasets, homework, and lec
 - NEVER modify this AGENTS.md without explicit permission
 - NEVER delete or overwrite files in `modified/` folders — they may contain completed examples
 - NEVER add "---" to outputs
+- Don't overuse " - " when writing
 - NEVER estimate time-consumption of approaches
-- When creating md-files, append date stamp: `2026_03_14`
+- When creating md-files, append the current date
 
 ## Repo Structure
 
