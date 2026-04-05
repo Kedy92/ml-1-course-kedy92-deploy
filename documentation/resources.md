@@ -2,6 +2,16 @@
 
 A collection of useful videos, articles, and tools organized by topic. These are gathered from across the course and will grow over time.
 
+## Courses / Playlists
+
+- Super good playlist by Sebastian Raschka with a ton of good videos on ML, where he uses a pytorch a lot: https://www.youtube.com/playlist?list=PLTKMiZHVd_2KJtIXOW0zFhFfBaJJilH51
+- fast.ai Practical Deep Learning - Lesson 1: https://course.fast.ai/Lessons/lesson1.html
+- fast.ai Practical Deep Learning - Lesson 2 (deployment and production): https://course.fast.ai/Lessons/lesson2.html
+- Kaggle Learn - Intro to Machine Learning: https://www.kaggle.com/learn/intro-to-machine-learning
+- Google ML Crash Course: https://developers.google.com/machine-learning/crash-course/framing/ml-terminology
+- StatQuest - ML playlist: https://www.youtube.com/watch?v=Gv9_4yMHFhI&list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF
+
+
 ## What is Machine Learning?
 
 - Fireship - Machine Learning in 100 Seconds (~2 min): https://www.youtube.com/watch?v=PeMlgBn-0cs
@@ -97,14 +107,6 @@ A collection of useful videos, articles, and tools organized by topic. These are
 - PyTorch Building Models: https://docs.pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html
 - PyTorch Optimization: https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html#full-implementation
 - PyTorch Autograd tutorial (automatic differentiation): https://docs.pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html
-
-## Courses
-
-- fast.ai Practical Deep Learning - Lesson 1: https://course.fast.ai/Lessons/lesson1.html
-- fast.ai Practical Deep Learning - Lesson 2 (deployment and production): https://course.fast.ai/Lessons/lesson2.html
-- Kaggle Learn - Intro to Machine Learning: https://www.kaggle.com/learn/intro-to-machine-learning
-- Google ML Crash Course: https://developers.google.com/machine-learning/crash-course/framing/ml-terminology
-- StatQuest - ML playlist: https://www.youtube.com/watch?v=Gv9_4yMHFhI&list=PLblh5JKOoLUICTaGLRoHQDuF_7q2GfuJF
 
 ## Math Prep (Bare Minimum)
 

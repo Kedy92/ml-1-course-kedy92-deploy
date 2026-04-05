@@ -22,6 +22,7 @@ FashionMNIST/
 oxford-iiit-pet/
 oxford-102-flowers/
 food-101/
+bird_data/
 
 # OS
 .DS_Store

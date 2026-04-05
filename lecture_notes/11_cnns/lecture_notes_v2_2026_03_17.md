@@ -51,6 +51,8 @@ This lesson builds a CNN from scratch in pure PyTorch. No fastai, no pretrained 
 TBA
 
 ### Videos
+- Watch all of the videos on CNN's from this playlist: https://www.youtube.com/playlist?list=PLTKMiZHVd_2KJtIXOW0zFhFfBaJJilH51 (L13 videos, e.g L13.1, L13.2, L13.3)
+First video in the section: https://www.youtube.com/watch?v=i-Ngb6tn_KM&list=PLTKMiZHVd_2KJtIXOW0zFhFfBaJJilH51&index=98
 
 - CNN intro (clear visual walkthrough of convolutions and pooling): https://www.youtube.com/watch?v=pj9-rr1wDhM
 - Alternative CNN intro (different angle, good for reinforcement): https://www.youtube.com/watch?v=HGwBXDKFk9I
