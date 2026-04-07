@@ -202,7 +202,9 @@ Model export, loading, serving (FastAPI), and MLOps basics are covered in a sepa
 ## Notebooks
 
 - **12_finetuning**: `lessons/neural_networks_images/12_finetuning_and_object_detection/modified/12_finetuning.ipynb` - fine-tuning pretrained models on the bird dataset, feature extraction vs full fine-tuning, discriminative LR, pretraining source comparison on Flowers102
-- **object_detection**: `lessons/neural_networks_images/12_finetuning_and_object_detection/modified/object_detection.ipynb` - YOLO inference, annotation format, fine-tuning on African Wildlife, detection metrics (mAP, IoU)
+- **object_detection**: `lessons/neural_networks_images/12_finetuning_and_object_detection/modified/object_detection.ipynb` - YOLO inference, annotation format, fine-tuning on African Wildlife + NEU steel defects, detection metrics (mAP, IoU)
+- **finetuning_project**: `lessons/neural_networks_images/12_finetuning_and_object_detection/homework/original/finetuning_project.ipynb` - pick a dataset and compare from-scratch vs frozen backbone vs full fine-tuning (HOMEWORK)
+- **object_detection_project**: `lessons/neural_networks_images/12_finetuning_and_object_detection/homework/original/object_detection_project.ipynb` - fine-tune YOLO on a new domain, evaluate and inspect results (HOMEWORK)
 
 ## Where This Fits
 
