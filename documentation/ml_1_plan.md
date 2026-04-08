@@ -5,12 +5,6 @@
 - [x]  Collaborative filtering + Embeddings (moved to Bonus Lessons)
 - [ ]  LLM:s
 
-[My ML experience](https://www.notion.so/My-ML-experience-30f6064241a180a0a9e1c18dcb11161e?pvs=21)
-
-[Ideas](https://www.notion.so/Ideas-2b56064241a180b889acf71de8996375?pvs=21)
-
-[Planering (1)](https://www.notion.so/2ec6064241a18038ad94cc4ecd2e67ca?pvs=21)
-
 ## Resources
 
 Decent tutorial on pytorch with some good videos:

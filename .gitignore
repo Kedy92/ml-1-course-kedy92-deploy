@@ -31,6 +31,11 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.codex
+.claude/settings.local.json
+
+# Internal planning notes
+**/plan.txt
 
 
 # Model weights and exports (downloaded or trained at runtime)
@@ -65,3 +70,4 @@ data/creditcard/
 # Bulldozer dataset (large files, built from Train.7z at runtime)
 data/bluebook-for-bulldozers/Train.csv
 data/bluebook-for-bulldozers/TrainAndValid.csv
+short_notes

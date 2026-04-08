@@ -1,6 +1,6 @@
 # Phase 3 Reference Material: Transformers, Embeddings, and NLP
 
-Material from Luke Ditria's PyTorch tutorials course that's relevant to Phase 3 (LLMs, Embeddings, RAG). Located at `/home/ua-tobias/projects/ML_learning/courses/pytorch_tutorials/`.
+Material from Luke Ditria's PyTorch tutorials that's relevant to Phase 3 (LLMs, Embeddings, RAG).
 
 ## Sequential Models (section12)
 

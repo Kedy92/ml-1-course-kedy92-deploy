@@ -152,7 +152,7 @@ After the demos, we'll map out the ML landscape, introduce the core vocabulary (
 1. Go to [colab.google.com](https://colab.google.com/)
 2. Click **File → Open notebook → GitHub**
 3. Authorize GitHub if prompted
-4. Paste the repo URL: `https://github.com/UA-classroom/pia25-ml_1_course-ua_ml_1`
+4. Paste your repo URL
 5. Select the notebook to open
 6. Work in Colab, then **File → Save a copy in GitHub** to save back to your fork
 
@@ -162,7 +162,7 @@ Colab sessions timeout after ~90 minutes of inactivity. Save your work frequentl
 
 ### Working Locally
 
-For local setup, follow the instructions in the repo [README.md](https://www.notion.so/README.md). The short version:
+For local setup, follow the instructions in the repo README. The short version:
 
 **With mamba (recommended):**
 

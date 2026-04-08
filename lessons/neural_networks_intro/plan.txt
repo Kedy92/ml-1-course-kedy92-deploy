@@ -1,3 +1,0 @@
-- After 06 the students should try to do the project file and start with MLP's. They could try the adult income dataset. 
-- The only major confusing part about 06, both the bank data or adult income dataset is the class imbalance. However, for binary classification, this is extremly common, so no point avoiding it. Perhaps consider a multi classification problem for their own sake instead of adult income, or give them a choice. 
-- This chapter leads the students into trees, as a moment to pause from NN's
