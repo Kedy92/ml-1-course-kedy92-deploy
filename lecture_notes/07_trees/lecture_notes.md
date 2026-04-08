@@ -81,7 +81,7 @@ This lesson by Jeremy Howard in the fastai course is a great place to start with
 - The first lecture which you can start watching from 1:26:40 https://www.youtube.com/watch?v=_rXzeWq4C6w&list=PLfYUBJiXbdtSvpQjSnJJ_PmDQB_VyT5iU&index=5
 - And the continuation of that lecture all the way up until 52 minutes https://www.youtube.com/watch?v=AdhG64NF76E&list=PLfYUBJiXbdtSvpQjSnJJ_PmDQB_VyT5iU&index=8
 
-They are based on a lecture notebook which is included in your repository in the fastai_course_notebooks just for convenience (*07-how-random-forests-really-work.ipynb*) and *09_tabular.ipynb*, which is from his book “fastbook” which is more theory heavy but is worth reading. Note that the 07 notebook uses the Titanic dataset for classification, which is a nice complement to our lesson notebook that focuses on regression (bulldozer prices). Once you’ve gone through these, the UA course lecture notebook will be better since its quite similar, but is more realistic, and streamlined - it mixes theory, but it also goes more into depth on gradient boosted trees, as they are generally more favored in real projects.
+The companion notebooks from Jeremy Howard’s fastbook are worth reading alongside this chapter - *07-how-random-forests-really-work.ipynb* covers random forests using the Titanic dataset (classification), which complements our notebook that focuses on regression (bulldozer prices). *09_tabular.ipynb* is more theory-heavy but worth it. You can find both at https://github.com/fastai/fastbook (see also `external_references.md` in the lesson folder). Our lesson notebook goes further into gradient boosted trees, which are generally more favored in real projects.
 
 ### Other videos that can be great to get different perspectives
 

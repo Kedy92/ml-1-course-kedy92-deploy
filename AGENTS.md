@@ -10,7 +10,6 @@ Notebooks, datasets, homework, and lecture notes for the book "Practical Machine
 - NEVER add "---" to outputs
 - Don't overuse " - " when writing
 - NEVER estimate time-consumption of approaches
-- When creating md-files, append the current date
 
 ## Repo Structure
 
