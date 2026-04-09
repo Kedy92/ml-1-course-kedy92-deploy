@@ -10,6 +10,7 @@ Notebooks, datasets, homework, and lecture notes for the book "Practical Machine
 - NEVER add "---" to outputs
 - Don't overuse " - " when writing
 - NEVER estimate time-consumption of approaches
+- ALL chart-building code (matplotlib layout, axes formatting, figure setup, annotation positioning) goes in the Cell 1 helpers cell as reusable functions. Logic cells only call these helpers with data as arguments. The only exception is when the plotting code itself IS the lesson (e.g. building a chart step by step to teach a concept).
 
 ## Repo Structure
 

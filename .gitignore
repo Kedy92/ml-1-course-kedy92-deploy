@@ -71,3 +71,5 @@ data/creditcard/
 data/bluebook-for-bulldozers/Train.csv
 data/bluebook-for-bulldozers/TrainAndValid.csv
 short_notes
+ml-100k/
+.~lock.*
