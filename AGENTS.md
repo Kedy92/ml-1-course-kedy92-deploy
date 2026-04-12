@@ -1,6 +1,6 @@
-# Course Repo: ua_ml_1
+# Practical Machine Learning for Programmers
 
-ML course material for Utvecklarakademin. Notebooks, datasets, homework, and lecture notes.
+Notebooks, datasets, homework, and lecture notes for the book "Practical Machine Learning for Programmers" by Utvecklarakademin UA Aktiebolag.
 
 ## Hard Rules
 
@@ -8,8 +8,9 @@ ML course material for Utvecklarakademin. Notebooks, datasets, homework, and lec
 - NEVER modify this AGENTS.md without explicit permission
 - NEVER delete or overwrite files in `modified/` folders — they may contain completed examples
 - NEVER add "---" to outputs
+- Don't overuse " - " when writing
 - NEVER estimate time-consumption of approaches
-- When creating md-files, append date stamp: `2026_03_14`
+- ALL chart-building code (matplotlib layout, axes formatting, figure setup, annotation positioning) goes in the Cell 1 helpers cell as reusable functions. Logic cells only call these helpers with data as arguments. The only exception is when the plotting code itself IS the lesson (e.g. building a chart step by step to teach a concept).
 
 ## Repo Structure
 
@@ -89,20 +90,20 @@ Lecture notes live in `lecture_notes/<lesson>/` as markdown files. They are intr
 - No backwards-compatibility concerns
 - Flag outdated techniques when encountered
 
-## Course Context
+## Context
 
-- Course plan: `documentation/ml_1_plan.md` (in the ML_learning repo)
-- Students have Python/web dev background (FastAPI, Docker, PostgreSQL)
+- Book plan: `documentation/ml_1_plan.md`
+- Target audience: developers with Python/web dev background (FastAPI, Docker, PostgreSQL)
 - Primary framework: PyTorch (fastai only in L2 as a high-level preview)
 - Dual environment: Google Colab + local with mamba/conda
-- Push updates to both `ua_ml_1` (template) and `pia25-ml_1_course-ua_ml_1` (classroom) — dual push is configured on origin
+- The canonical repository is maintained by Utvecklarakademin UA Aktiebolag
 
 ## Copyright
 
 All notebooks include a copyright footer:
 ```html
 <div style="text-align: center; color: #888; font-size: 0.85em; margin-top: 40px; padding-top: 10px; border-top: 1px solid #ddd;">
-© 2025 Utvecklarakademin UA Aktiebolag. All rights reserved.<br>
+© 2025-2026 Utvecklarakademin UA Aktiebolag. All rights reserved.<br>
 This material is proprietary and may not be reproduced, distributed, or shared without written permission.
 </div>
 ```

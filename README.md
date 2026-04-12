@@ -1,6 +1,8 @@
-# ML Course - Utvecklarakademin
+# Practical Machine Learning for Programmers
 
-Machine learning course material. Notebooks, projects, and datasets for hands-on learning with Python, PyTorch, and scikit-learn.
+Notebooks, projects, and datasets for learning practical machine learning with Python, PyTorch, and scikit-learn.
+
+Website: [practical-ml.com](https://practical-ml.com)
 
 ## Repo structure
 
@@ -102,8 +104,8 @@ If you don't want to install anything at all, you can open notebooks directly at
 **Setup:**
 1. Go to [colab.google.com](https://colab.google.com) and sign in with your Google account
 2. Go to [colab.google.com/github](https://colab.google.com/github) to connect your GitHub account
-3. Check **"Include private repositories"** (important - your course repo is private)
-4. If prompted, grant access to the **UA-classroom** organization
+3. Check **"Include private repositories"** (important - the repo is private)
+4. If prompted, grant access to the **UA-classroom** organization on GitHub
 
 **Opening a notebook:**
 1. In the GitHub tab, paste your repo URL
@@ -121,11 +123,11 @@ If you don't want to install anything at all, you can open notebooks directly at
 - Sessions timeout after ~90 minutes of inactivity
 - Need to re-upload data files each session
 
-**Troubleshooting:** If your repo doesn't show up, go to [github.com/settings/applications](https://github.com/settings/applications), find Google Colaboratory, and grant it access to the UA-classroom organization.
+**Troubleshooting:** If your repo doesn't show up, go to [github.com/settings/applications](https://github.com/settings/applications), find Google Colaboratory, and grant it access to the organization.
 
 ## Staying in sync with course updates
 
-I will be pushing new lessons, fixes, and improvements throughout the semester. You need to pull these updates into your repo regularly.
+New lessons, fixes, and improvements are pushed regularly. You need to pull these updates into your repo.
 
 ### On GitHub (easiest)
 
@@ -136,8 +138,8 @@ If you don't see that button, you'll need to use the terminal method below.
 ### From the terminal
 
 ```bash
-# One-time setup: add the course repo as upstream
-git remote add upstream https://github.com/UA-classroom/pia25-ml_1_course-ua_ml_1.git
+# One-time setup: add the book repo as upstream
+git remote add upstream https://github.com/UA-classroom/practical-ml-book.git
 
 # Pull latest changes (do this before each lesson)
 git fetch upstream
@@ -151,11 +153,13 @@ Or just run the helper script:
 ./sync.sh
 ```
 
-**Note:** If `git fetch upstream` gives you "repository not found", you might not have read access to the course repo yet. Contact Tobias to get access.
+**Note:** If `git fetch upstream` gives you "repository not found", you might not have read access yet. Contact Utvecklarakademin to get access.
 
 **Important:** If you only edit files in `modified/` folders (which you should), this will merge cleanly every time. If you do get merge conflicts, keep your version - your work matters more than the upstream update.
 
 ## License
+
+"Practical Machine Learning for Programmers" by Tobias Fors
 
 (c) 2025 Utvecklarakademin UA Aktiebolag. All rights reserved. See [LICENSE](LICENSE) for details.
 
