@@ -1,0 +1,35 @@
+{
+  "train_rows": 19200,
+  "val_rows": 4800,
+  "test_rows": 6000,
+  "target_rate_train": 0.22119791666666666,
+  "target_rate_val": 0.22125,
+  "target_rate_test": 0.22116666666666668,
+  "categorical_columns": [
+    "sex",
+    "education",
+    "marriage"
+  ],
+  "numerical_columns": [
+    "limit_bal",
+    "age",
+    "pay_0",
+    "pay_2",
+    "pay_3",
+    "pay_4",
+    "pay_5",
+    "pay_6",
+    "bill_amt1",
+    "bill_amt2",
+    "bill_amt3",
+    "bill_amt4",
+    "bill_amt5",
+    "bill_amt6",
+    "pay_amt1",
+    "pay_amt2",
+    "pay_amt3",
+    "pay_amt4",
+    "pay_amt5",
+    "pay_amt6"
+  ]
+}

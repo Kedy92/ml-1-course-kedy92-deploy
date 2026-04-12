@@ -1,0 +1,180 @@
+{
+  "dataset": "UCI Default of Credit Card Clients",
+  "feature_count": 23,
+  "categorical_features": [
+    "sex",
+    "education",
+    "marriage"
+  ],
+  "numerical_features": [
+    "limit_bal",
+    "age",
+    "pay_0",
+    "pay_2",
+    "pay_3",
+    "pay_4",
+    "pay_5",
+    "pay_6",
+    "bill_amt1",
+    "bill_amt2",
+    "bill_amt3",
+    "bill_amt4",
+    "bill_amt5",
+    "bill_amt6",
+    "pay_amt1",
+    "pay_amt2",
+    "pay_amt3",
+    "pay_amt4",
+    "pay_amt5",
+    "pay_amt6"
+  ],
+  "best_mlp_config": {
+    "name": "wider",
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "dropout": 0.2,
+    "learning_rate": 0.0008,
+    "weight_decay": 0.0001,
+    "batch_size": 512,
+    "epochs": 24,
+    "patience": 5
+  },
+  "mlp_test_metrics": {
+    "accuracy": 0.7603333333333333,
+    "precision": 0.4669051878354204,
+    "recall": 0.5900527505651846,
+    "f1": 0.5213049267643143,
+    "auc_roc": 0.7724490656533363,
+    "threshold": 0.5,
+    "classification_report": {
+      "0.0": {
+        "precision": 0.8741614619477215,
+        "recall": 0.8086882088594051,
+        "f1-score": 0.8401511783014673,
+        "support": 4673.0
+      },
+      "1.0": {
+        "precision": 0.4669051878354204,
+        "recall": 0.5900527505651846,
+        "f1-score": 0.5213049267643143,
+        "support": 1327.0
+      },
+      "accuracy": 0.7603333333333333,
+      "macro avg": {
+        "precision": 0.6705333248915709,
+        "recall": 0.6993704797122948,
+        "f1-score": 0.6807280525328908,
+        "support": 6000.0
+      },
+      "weighted avg": {
+        "precision": 0.7840899493232176,
+        "recall": 0.7603333333333333,
+        "f1-score": 0.7696330156698337,
+        "support": 6000.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        3779,
+        894
+      ],
+      [
+        544,
+        783
+      ]
+    ],
+    "loss": 0.8828232536315918
+  },
+  "random_forest_metrics": {
+    "accuracy": 0.813,
+    "precision": 0.6082365364308342,
+    "recall": 0.43406179351921625,
+    "f1": 0.5065963060686016,
+    "auc_roc": 0.7687528493061925,
+    "threshold": 0.5,
+    "classification_report": {
+      "0": {
+        "precision": 0.8513754205422521,
+        "recall": 0.9206077466295741,
+        "f1-score": 0.8846391116594695,
+        "support": 4673.0
+      },
+      "1": {
+        "precision": 0.6082365364308342,
+        "recall": 0.43406179351921625,
+        "f1-score": 0.5065963060686016,
+        "support": 1327.0
+      },
+      "accuracy": 0.813,
+      "macro avg": {
+        "precision": 0.7298059784865432,
+        "recall": 0.6773347700743952,
+        "f1-score": 0.6956177088640356,
+        "support": 6000.0
+      },
+      "weighted avg": {
+        "precision": 0.7976012040062769,
+        "recall": 0.813,
+        "f1-score": 0.8010286444896225,
+        "support": 6000.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        4302,
+        371
+      ],
+      [
+        751,
+        576
+      ]
+    ]
+  },
+  "catboost_metrics": {
+    "accuracy": 0.7695,
+    "precision": 0.483451536643026,
+    "recall": 0.6164280331574982,
+    "f1": 0.5419012918184829,
+    "auc_roc": 0.7781117165083257,
+    "threshold": 0.5,
+    "classification_report": {
+      "0": {
+        "precision": 0.8818477251624884,
+        "recall": 0.8129681147014766,
+        "f1-score": 0.8460082396169691,
+        "support": 4673.0
+      },
+      "1": {
+        "precision": 0.483451536643026,
+        "recall": 0.6164280331574982,
+        "f1-score": 0.5419012918184829,
+        "support": 1327.0
+      },
+      "accuracy": 0.7695,
+      "macro avg": {
+        "precision": 0.6826496309027572,
+        "recall": 0.7146980739294874,
+        "f1-score": 0.6939547657177261,
+        "support": 6000.0
+      },
+      "weighted avg": {
+        "precision": 0.793735768134934,
+        "recall": 0.7695,
+        "f1-score": 0.7787499196622039,
+        "support": 6000.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        3799,
+        874
+      ],
+      [
+        509,
+        818
+      ]
+    ]
+  }
+}
