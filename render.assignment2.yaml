@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: credit-card-default-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./assignment2_credit_default/docker/Dockerfile.api
+    dockerContext: ./assignment2_credit_default
+    healthCheckPath: /health
+    autoDeployTrigger: commit
