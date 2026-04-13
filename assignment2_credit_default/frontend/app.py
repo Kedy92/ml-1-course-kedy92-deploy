@@ -87,6 +87,22 @@ st.markdown(
         color: #334155 !important;
         fill: #334155 !important;
     }
+    [data-testid="stNumberInput"] button {
+        background: #e2e8f0 !important;
+        border-left: 1px solid #cbd5e1 !important;
+        opacity: 1 !important;
+    }
+    [data-testid="stNumberInput"] button:hover {
+        background: #cbd5e1 !important;
+    }
+    [data-testid="stNumberInput"] input::placeholder,
+    [data-baseweb="select"] input::placeholder {
+        color: #64748b !important;
+        -webkit-text-fill-color: #64748b !important;
+    }
+    [data-testid="stTable"] * {
+        color: #0f172a !important;
+    }
     [data-testid="stSlider"] [role="slider"] {
         background-color: #ef4444 !important;
     }
@@ -241,7 +257,7 @@ if submitted:
                         {"Field": "Recent repayment", "Value": pay_0},
                     ]
                 )
-                st.dataframe(explanation_df, use_container_width=True, hide_index=True)
+                st.table(explanation_df)
 
                 with st.expander("Show raw JSON payload"):
                     st.json(payload, expanded=False)
