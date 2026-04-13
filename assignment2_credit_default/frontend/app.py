@@ -64,6 +64,23 @@ st.markdown(
     [data-testid="stAlertContainer"] *, [data-testid="stMarkdownContainer"] * {
         color: inherit !important;
     }
+    [data-baseweb="select"] > div,
+    [data-baseweb="base-input"] > div,
+    [data-testid="stNumberInput"] input,
+    [data-testid="stTextInput"] input {
+        color: #f8fafc !important;
+    }
+    [data-baseweb="select"] svg,
+    [data-baseweb="base-input"] svg {
+        fill: #f8fafc !important;
+        color: #f8fafc !important;
+    }
+    [data-testid="stNumberInput"] label,
+    [data-testid="stSelectbox"] label,
+    [data-testid="stSlider"] label,
+    [data-testid="stRadio"] label {
+        color: #0f172a !important;
+    }
     div[data-testid="stButton"] > button {
         border-radius: 12px;
         font-weight: 600;
