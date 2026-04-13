@@ -21,6 +21,9 @@ st.markdown(
             radial-gradient(circle at top left, rgba(53, 94, 255, 0.08), transparent 28%),
             linear-gradient(180deg, #f8fafc 0%, #eef4fb 100%);
     }
+    .stApp, .stApp * {
+        color: #0f172a !important;
+    }
     .block-container {
         max-width: 1180px;
         padding-top: 2rem;
@@ -45,12 +48,21 @@ st.markdown(
         opacity: 0.92;
         color: white;
     }
+    .hero, .hero * {
+        color: white !important;
+    }
     div[data-testid="stForm"] {
         background: rgba(255, 255, 255, 0.82);
         border: 1px solid rgba(15, 23, 42, 0.08);
         border-radius: 18px;
         padding: 1rem 1rem 0.4rem 1rem;
         box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+    }
+    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
+        color: #0f172a !important;
+    }
+    [data-testid="stAlertContainer"] *, [data-testid="stMarkdownContainer"] * {
+        color: inherit !important;
     }
     div[data-testid="stButton"] > button {
         border-radius: 12px;
