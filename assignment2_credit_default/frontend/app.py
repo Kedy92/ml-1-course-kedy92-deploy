@@ -18,65 +18,48 @@ st.markdown(
     <style>
     .stApp {
         background:
-            radial-gradient(circle at top left, rgba(53, 94, 255, 0.10), transparent 28%),
-            radial-gradient(circle at bottom right, rgba(33, 150, 243, 0.10), transparent 30%),
-            linear-gradient(180deg, #f7f9fc 0%, #eef3f9 100%);
-        color: #0f172a;
+            radial-gradient(circle at top left, rgba(53, 94, 255, 0.08), transparent 28%),
+            linear-gradient(180deg, #f8fafc 0%, #eef4fb 100%);
     }
-    .stApp, .stApp p, .stApp label, .stApp span, .stApp div, .stApp h1, .stApp h2, .stApp h3 {
-        color: #0f172a;
-    }
-    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
-        color: #0f172a !important;
-    }
-    [data-testid="stMarkdownContainer"] p,
-    [data-testid="stMarkdownContainer"] li,
-    [data-testid="stMarkdownContainer"] strong {
-        color: #0f172a !important;
-    }
-    [data-testid="stDataFrame"] * {
-        color: inherit !important;
-    }
-    .stSubheader, .stCaption {
-        color: #334155 !important;
+    .block-container {
+        max-width: 1180px;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
     .hero {
-        padding: 1.4rem 1.6rem;
-        border-radius: 18px;
-        background: linear-gradient(135deg, #101828 0%, #1d3557 60%, #3a86ff 100%);
+        padding: 1.5rem 1.7rem;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #0f172a 0%, #1d3557 58%, #4f7cff 100%);
         color: white;
-        box-shadow: 0 18px 40px rgba(16, 24, 40, 0.18);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
         margin-bottom: 1rem;
     }
     .hero h1 {
         margin: 0 0 0.35rem 0;
-        font-size: 2.2rem;
+        font-size: 2.15rem;
+        color: white;
     }
     .hero p {
         margin: 0;
-        opacity: 0.92;
         font-size: 1rem;
+        opacity: 0.92;
+        color: white;
     }
-    .hero h1, .hero p {
-        color: white !important;
+    div[data-testid="stForm"] {
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 18px;
+        padding: 1rem 1rem 0.4rem 1rem;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
     }
-    .metric-card {
-        padding: 1rem 1.1rem;
-        border-radius: 16px;
-        background: white;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-        color: #0f172a !important;
-    }
-    [data-testid="stNumberInput"] input,
-    [data-testid="stSelectbox"] div,
-    [data-testid="stTextInput"] input {
-        color: #0f172a !important;
+    div[data-testid="stButton"] > button {
+        border-radius: 12px;
+        font-weight: 600;
     }
     </style>
     <div class="hero">
       <h1>Credit Default Predictor</h1>
-      <p>Compare the PyTorch MLP and CatBoost model on the same credit-card customer profile.</p>
+      <p>Compare the PyTorch MLP and CatBoost model on the same customer profile and estimate next-month default risk.</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -84,52 +67,55 @@ st.markdown(
 
 st.caption(f"API base URL: {API_BASE_URL}")
 
-left, right = st.columns([1.15, 0.85], gap="large")
+left, right = st.columns([1.25, 0.75], gap="large")
 
 with left:
     st.subheader("Customer Profile")
-    model_choice = st.radio(
-        "Prediction model",
-        options=["tree", "mlp"],
-        horizontal=True,
-        format_func=lambda value: "CatBoost Tree" if value == "tree" else "PyTorch MLP",
-    )
+    with st.form("prediction_form"):
+        model_choice = st.radio(
+            "Prediction model",
+            options=["tree", "mlp"],
+            horizontal=True,
+            format_func=lambda value: "CatBoost Tree" if value == "tree" else "PyTorch MLP",
+        )
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        limit_bal = st.number_input("Credit limit", min_value=10000, max_value=1000000, value=120000, step=10000)
-        sex = st.selectbox("Sex", ["female", "male"])
-        education = st.selectbox("Education", ["graduate_school", "university", "high_school", "other", "unknown"])
-    with col2:
-        marriage = st.selectbox("Marriage", ["single", "married", "other", "unknown"])
-        age = st.slider("Age", min_value=18, max_value=80, value=26)
-        pay_0 = st.slider("Recent repayment status (PAY_0)", min_value=-2, max_value=8, value=-1)
-    with col3:
-        pay_2 = st.slider("PAY_2", min_value=-2, max_value=8, value=2)
-        pay_3 = st.slider("PAY_3", min_value=-2, max_value=8, value=0)
-        pay_4 = st.slider("PAY_4", min_value=-2, max_value=8, value=0)
+        top_cols = st.columns(3)
+        with top_cols[0]:
+            limit_bal = st.number_input("Credit limit", min_value=10000, max_value=1000000, value=120000, step=10000)
+            sex = st.selectbox("Sex", ["female", "male"])
+            education = st.selectbox(
+                "Education",
+                ["graduate_school", "university", "high_school", "other", "unknown"],
+            )
+        with top_cols[1]:
+            marriage = st.selectbox("Marriage", ["single", "married", "other", "unknown"])
+            age = st.slider("Age", min_value=18, max_value=80, value=26)
+            pay_0 = st.slider("Recent repayment status (PAY_0)", min_value=-2, max_value=8, value=-1)
+        with top_cols[2]:
+            pay_2 = st.slider("PAY_2", min_value=-2, max_value=8, value=2)
+            pay_3 = st.slider("PAY_3", min_value=-2, max_value=8, value=0)
+            pay_4 = st.slider("PAY_4", min_value=-2, max_value=8, value=0)
 
-    repayment_cols = st.columns(2)
-    with repayment_cols[0]:
-        pay_5 = st.slider("PAY_5", min_value=-2, max_value=8, value=0)
-        pay_6 = st.slider("PAY_6", min_value=-2, max_value=8, value=2)
-        bill_amt1 = st.number_input("Bill amount 1", value=2682.0, step=100.0)
-        bill_amt2 = st.number_input("Bill amount 2", value=1725.0, step=100.0)
-        bill_amt3 = st.number_input("Bill amount 3", value=2682.0, step=100.0)
-        bill_amt4 = st.number_input("Bill amount 4", value=3272.0, step=100.0)
-    with repayment_cols[1]:
-        bill_amt5 = st.number_input("Bill amount 5", value=3455.0, step=100.0)
-        bill_amt6 = st.number_input("Bill amount 6", value=3261.0, step=100.0)
-        pay_amt1 = st.number_input("Payment amount 1", value=0.0, step=100.0)
-        pay_amt2 = st.number_input("Payment amount 2", value=1000.0, step=100.0)
-        pay_amt3 = st.number_input("Payment amount 3", value=1000.0, step=100.0)
-        pay_amt4 = st.number_input("Payment amount 4", value=1000.0, step=100.0)
+        st.markdown("#### Bills and Payments")
+        lower_cols = st.columns(2)
+        with lower_cols[0]:
+            pay_5 = st.slider("PAY_5", min_value=-2, max_value=8, value=0)
+            pay_6 = st.slider("PAY_6", min_value=-2, max_value=8, value=2)
+            bill_amt1 = st.number_input("Bill amount 1", value=2682.0, step=100.0)
+            bill_amt2 = st.number_input("Bill amount 2", value=1725.0, step=100.0)
+            bill_amt3 = st.number_input("Bill amount 3", value=2682.0, step=100.0)
+            bill_amt4 = st.number_input("Bill amount 4", value=3272.0, step=100.0)
+            bill_amt5 = st.number_input("Bill amount 5", value=3455.0, step=100.0)
+            bill_amt6 = st.number_input("Bill amount 6", value=3261.0, step=100.0)
+        with lower_cols[1]:
+            pay_amt1 = st.number_input("Payment amount 1", value=0.0, step=100.0)
+            pay_amt2 = st.number_input("Payment amount 2", value=1000.0, step=100.0)
+            pay_amt3 = st.number_input("Payment amount 3", value=1000.0, step=100.0)
+            pay_amt4 = st.number_input("Payment amount 4", value=1000.0, step=100.0)
+            pay_amt5 = st.number_input("Payment amount 5", value=0.0, step=100.0)
+            pay_amt6 = st.number_input("Payment amount 6", value=2000.0, step=100.0)
 
-    payment_tail_cols = st.columns(2)
-    with payment_tail_cols[0]:
-        pay_amt5 = st.number_input("Payment amount 5", value=0.0, step=100.0)
-    with payment_tail_cols[1]:
-        pay_amt6 = st.number_input("Payment amount 6", value=2000.0, step=100.0)
+        submitted = st.form_submit_button("Run prediction", type="primary", use_container_width=True)
 
     payload = {
         "limit_bal": int(limit_bal),
@@ -157,36 +143,34 @@ with left:
         "pay_amt6": float(pay_amt6),
     }
 
-    predict = st.button("Run prediction", type="primary", use_container_width=True)
-
 with right:
-    st.subheader("Result")
-    result_slot = st.empty()
+    st.subheader("Model Notes")
+    with st.container(border=True):
+        st.markdown(
+            """
+            **How to read repayment codes**
 
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.markdown(
-        """
-        **How to read the repayment codes**
-
-        Negative values mean the customer paid on time or early.
-        Positive values mean delayed repayment, and larger values mean longer delays.
-        """
-    )
-    st.markdown("</div>", unsafe_allow_html=True)
+            Negative values mean the customer paid on time or early.
+            Positive values mean delayed repayment, and larger values mean longer delays.
+            """
+        )
 
     st.write("")
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-    st.markdown(
-        """
-        **What the models do**
 
-        - **CatBoost Tree**: stronger on tabular structure and usually the best practical baseline.
-        - **PyTorch MLP**: uses embeddings for categorical features and learns nonlinear interactions.
-        """
-    )
-    st.markdown("</div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown(
+            """
+            **What the models do**
 
-if predict:
+            - **CatBoost Tree**: usually the strongest practical baseline for tabular data.
+            - **PyTorch MLP**: uses embeddings for categorical features and learns nonlinear interactions.
+            """
+        )
+
+    st.write("")
+    st.subheader("Result")
+
+if submitted:
     endpoint = f"{API_BASE_URL}/predict/{model_choice}"
     with st.spinner("Contacting API..."):
         try:
@@ -194,26 +178,35 @@ if predict:
             response.raise_for_status()
             result = response.json()
         except requests.RequestException as exc:
-            result_slot.error(f"Request failed: {exc}")
+            st.error(f"Request failed: {exc}")
         else:
             probability = float(result["probability"])
             prediction = result["prediction"].replace("_", " ").title()
             risk_label = "High risk" if probability >= 0.5 else "Lower risk"
 
-            result_slot.success(f"{prediction} ({risk_label})")
-            metric_cols = st.columns(2)
-            metric_cols[0].metric("Predicted probability", f"{probability:.1%}")
-            metric_cols[1].metric("Model used", "CatBoost" if model_choice == "tree" else "MLP")
+            with right:
+                if probability >= 0.5:
+                    st.error(f"{prediction} ({risk_label})")
+                else:
+                    st.success(f"{prediction} ({risk_label})")
 
-            explanation_df = pd.DataFrame(
-                [
-                    {"Field": "Credit limit", "Value": f"{limit_bal:,}"},
-                    {"Field": "Age", "Value": age},
-                    {"Field": "Education", "Value": education.replace('_', ' ')},
-                    {"Field": "Marriage", "Value": marriage},
-                    {"Field": "Recent repayment", "Value": pay_0},
-                ]
-            )
-            st.dataframe(explanation_df, use_container_width=True, hide_index=True)
+                metric_cols = st.columns(2)
+                metric_cols[0].metric("Predicted probability", f"{probability:.1%}")
+                metric_cols[1].metric("Model used", "CatBoost" if model_choice == "tree" else "MLP")
 
-            st.json(payload, expanded=False)
+                explanation_df = pd.DataFrame(
+                    [
+                        {"Field": "Credit limit", "Value": f"{limit_bal:,}"},
+                        {"Field": "Age", "Value": age},
+                        {"Field": "Education", "Value": education.replace("_", " ")},
+                        {"Field": "Marriage", "Value": marriage},
+                        {"Field": "Recent repayment", "Value": pay_0},
+                    ]
+                )
+                st.dataframe(explanation_df, use_container_width=True, hide_index=True)
+
+                with st.expander("Show raw JSON payload"):
+                    st.json(payload, expanded=False)
+else:
+    with right:
+        st.info("Fill in the form and run a prediction to compare the two models.")
