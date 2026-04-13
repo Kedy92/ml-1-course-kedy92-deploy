@@ -6,7 +6,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
     accuracy_score,
@@ -85,7 +84,7 @@ def plot_training_history(history: list[dict], path: Path) -> None:
 def plot_feature_importance(importances: pd.Series, title: str, path: Path, top_n: int = 15) -> None:
     top = importances.sort_values(ascending=False).head(top_n).sort_values()
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.barplot(x=top.values, y=top.index, orient="h", ax=ax, color="#3b82f6")
+    ax.barh(top.index, top.values, color="#3b82f6")
     ax.set_title(title)
     ax.set_xlabel("Importance")
     ax.set_ylabel("")
