@@ -21,6 +21,24 @@ st.markdown(
             radial-gradient(circle at top left, rgba(53, 94, 255, 0.10), transparent 28%),
             radial-gradient(circle at bottom right, rgba(33, 150, 243, 0.10), transparent 30%),
             linear-gradient(180deg, #f7f9fc 0%, #eef3f9 100%);
+        color: #0f172a;
+    }
+    .stApp, .stApp p, .stApp label, .stApp span, .stApp div, .stApp h1, .stApp h2, .stApp h3 {
+        color: #0f172a;
+    }
+    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
+        color: #0f172a !important;
+    }
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] li,
+    [data-testid="stMarkdownContainer"] strong {
+        color: #0f172a !important;
+    }
+    [data-testid="stDataFrame"] * {
+        color: inherit !important;
+    }
+    .stSubheader, .stCaption {
+        color: #334155 !important;
     }
     .hero {
         padding: 1.4rem 1.6rem;
@@ -39,12 +57,21 @@ st.markdown(
         opacity: 0.92;
         font-size: 1rem;
     }
+    .hero h1, .hero p {
+        color: white !important;
+    }
     .metric-card {
         padding: 1rem 1.1rem;
         border-radius: 16px;
         background: white;
         border: 1px solid rgba(15, 23, 42, 0.06);
         box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+        color: #0f172a !important;
+    }
+    [data-testid="stNumberInput"] input,
+    [data-testid="stSelectbox"] div,
+    [data-testid="stTextInput"] input {
+        color: #0f172a !important;
     }
     </style>
     <div class="hero">
