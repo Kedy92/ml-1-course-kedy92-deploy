@@ -7,6 +7,21 @@ import streamlit as st
 
 API_BASE_URL = os.getenv("API_URL", "https://credit-card-default-api.onrender.com").rstrip("/")
 
+
+def render_summary_table(df: pd.DataFrame) -> str:
+    rows = "".join(
+        f"<tr><td>{row.Field}</td><td>{row.Value}</td></tr>"
+        for row in df.itertuples(index=False)
+    )
+    return f"""
+    <table class="summary-table">
+      <thead>
+        <tr><th>Field</th><th>Value</th></tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+    """
+
 st.set_page_config(
     page_title="Credit Default Predictor",
     page_icon="💳",
@@ -109,6 +124,28 @@ st.markdown(
     div[data-testid="stButton"] > button {
         border-radius: 12px;
         font-weight: 600;
+    }
+    .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #111827;
+        color: #f8fafc;
+    }
+    .summary-table th,
+    .summary-table td {
+        padding: 0.7rem 0.85rem;
+        text-align: left;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #f8fafc !important;
+    }
+    .summary-table thead th {
+        background: #0f172a;
+        font-weight: 700;
+    }
+    .summary-table tbody tr:nth-child(even) td {
+        background: rgba(255, 255, 255, 0.03);
     }
     </style>
     <div class="hero">
@@ -257,7 +294,7 @@ if submitted:
                         {"Field": "Recent repayment", "Value": pay_0},
                     ]
                 )
-                st.table(explanation_df)
+                st.markdown(render_summary_table(explanation_df), unsafe_allow_html=True)
 
                 with st.expander("Show raw JSON payload"):
                     st.json(payload, expanded=False)
