@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: credit-card-default-ui
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./assignment2_credit_default/frontend/Dockerfile
+    dockerContext: ./assignment2_credit_default
+    autoDeployTrigger: commit

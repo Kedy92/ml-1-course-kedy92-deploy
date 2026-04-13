@@ -76,6 +76,17 @@ Example payload:
 
 The same payload is saved in `sample_request.json`.
 
+## Streamlit Frontend
+
+There is also a small Streamlit UI in `frontend/app.py` that can call the deployed API.
+
+Run locally:
+
+```bash
+API_URL=https://credit-card-default-api.onrender.com \
+.venv-assignment1/bin/streamlit run assignment2_credit_default/frontend/app.py
+```
+
 ## Docker Compose
 
 From `assignment2_credit_default/`:
