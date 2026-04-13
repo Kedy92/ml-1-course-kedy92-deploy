@@ -21,35 +21,31 @@ st.markdown(
             radial-gradient(circle at top left, rgba(53, 94, 255, 0.08), transparent 28%),
             linear-gradient(180deg, #f8fafc 0%, #eef4fb 100%);
     }
-    .stApp, .stApp * {
-        color: #0f172a !important;
-    }
     .block-container {
         max-width: 1180px;
         padding-top: 2rem;
         padding-bottom: 2rem;
     }
+    .stApp, .stApp p, .stApp li, .stApp label, .stApp span, .stApp div, .stApp h1, .stApp h2, .stApp h3 {
+        color: #0f172a;
+    }
     .hero {
         padding: 1.5rem 1.7rem;
         border-radius: 20px;
         background: linear-gradient(135deg, #0f172a 0%, #1d3557 58%, #4f7cff 100%);
-        color: white;
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
         margin-bottom: 1rem;
     }
     .hero h1 {
         margin: 0 0 0.35rem 0;
         font-size: 2.15rem;
-        color: white;
+        color: #ffffff !important;
     }
     .hero p {
         margin: 0;
         font-size: 1rem;
         opacity: 0.92;
-        color: white;
-    }
-    .hero, .hero * {
-        color: white !important;
+        color: #ffffff !important;
     }
     div[data-testid="stForm"] {
         background: rgba(255, 255, 255, 0.82);
@@ -58,28 +54,41 @@ st.markdown(
         padding: 1rem 1rem 0.4rem 1rem;
         box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
     }
-    [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
+    [data-testid="stMetricValue"], [data-testid="stMetricLabel"], [data-testid="stCaptionContainer"] {
         color: #0f172a !important;
-    }
-    [data-testid="stAlertContainer"] *, [data-testid="stMarkdownContainer"] * {
-        color: inherit !important;
-    }
-    [data-baseweb="select"] > div,
-    [data-baseweb="base-input"] > div,
-    [data-testid="stNumberInput"] input,
-    [data-testid="stTextInput"] input {
-        color: #f8fafc !important;
-    }
-    [data-baseweb="select"] svg,
-    [data-baseweb="base-input"] svg {
-        fill: #f8fafc !important;
-        color: #f8fafc !important;
     }
     [data-testid="stNumberInput"] label,
     [data-testid="stSelectbox"] label,
     [data-testid="stSlider"] label,
     [data-testid="stRadio"] label {
         color: #0f172a !important;
+    }
+    [data-testid="stNumberInput"] input,
+    [data-testid="stTextInput"] input {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+        border-radius: 10px !important;
+    }
+    [data-baseweb="select"] > div {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-radius: 10px !important;
+    }
+    [data-baseweb="select"] span,
+    [data-baseweb="select"] input,
+    [data-baseweb="select"] div {
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+    }
+    [data-baseweb="select"] svg,
+    [data-testid="stNumberInput"] button,
+    [data-testid="stNumberInput"] svg {
+        color: #334155 !important;
+        fill: #334155 !important;
+    }
+    [data-testid="stSlider"] [role="slider"] {
+        background-color: #ef4444 !important;
     }
     div[data-testid="stButton"] > button {
         border-radius: 12px;
