@@ -94,3 +94,20 @@ From `assignment2_credit_default/`:
 ```bash
 docker-compose up --build
 ```
+
+## Railway Deployment
+
+Deploy the API and UI as two separate services from the same repo.
+
+API service:
+
+- root directory: `assignment2_credit_default`
+- dockerfile: `docker/Dockerfile.api`
+
+UI service:
+
+- root directory: `assignment2_credit_default`
+- dockerfile: `frontend/Dockerfile`
+- set env var `API_URL` to your Railway API URL
+
+Railway injects `PORT` automatically, and both Dockerfiles now respect it.
